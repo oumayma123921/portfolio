@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { MouseEvent } from "react";
 import { motion } from "framer-motion";
 import {
   ExternalLink,
@@ -6,7 +7,6 @@ import {
   ChevronRight,
   X,
 } from "lucide-react";
-import SectionTitle from "../components/SectionTitle";
 
 const certifications = [
   {
@@ -70,28 +70,36 @@ export default function Certifications() {
      CAROUSEL
   ============================================================ */
 
-  const goPrevious = () => {
+  const goPrevious = useCallback(() => {
     setDirection(-1);
 
     setActiveIndex(
       (current) => (current - 1 + total) % total
     );
-  };
+  }, [total]);
 
-  const goNext = () => {
+  const goNext = useCallback(() => {
     setDirection(1);
 
     setActiveIndex(
       (current) => (current + 1) % total
     );
-  };
+  }, [total]);
 
-  const goTo = (index: number) => {
-    if (index === activeIndex) return;
+  const goTo = useCallback(
+    (index: number) => {
+      setActiveIndex((current) => {
+        if (index === current) {
+          return current;
+        }
 
-    setDirection(index > activeIndex ? 1 : -1);
-    setActiveIndex(index);
-  };
+        setDirection(index > current ? 1 : -1);
+
+        return index;
+      });
+    },
+    []
+  );
 
   const previousIndex =
     (activeIndex - 1 + total) % total;
@@ -182,7 +190,11 @@ export default function Certifications() {
         handleKeyDown
       );
     };
-  }, [selectedBadge]);
+  }, [
+    selectedBadge,
+    goPrevious,
+    goNext,
+  ]);
 
   /* ============================================================
      BODY SCROLL LOCK
@@ -205,7 +217,7 @@ export default function Certifications() {
   ============================================================ */
 
   const handleDialogClick = (
-    event: React.MouseEvent<HTMLDialogElement>
+    event: MouseEvent<HTMLDialogElement>
   ) => {
     if (event.target === event.currentTarget) {
       setSelectedBadge(null);
@@ -228,100 +240,79 @@ export default function Certifications() {
               HEADER
           ==================================================== */}
 
-          <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-            <SectionTitle
-              eyebrow="Credentials"
-              title="Certifications"
-              description="Continuous learning through professional courses and certifications in artificial intelligence, machine learning and data analytics."
-            />
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 15,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              duration: 0.5,
+            }}
+            className="
+              mx-auto mb-8
+              max-w-2xl
+              text-center
+              sm:mb-10
+            "
+          >
+            <div className="mb-3 flex items-center justify-center gap-3">
+              <div className="h-px w-7 bg-cyan-400/70" />
 
-            {/* Desktop arrows */}
-            <div className="hidden shrink-0 items-center gap-2 sm:flex">
-              <button
-                type="button"
-                onClick={goPrevious}
-                aria-label="Previous certification"
+              <span
                 className="
-                  flex h-11 w-11
-                  items-center justify-center
-                  rounded-xl
-                  border border-white/[0.08]
-                  bg-white/[0.025]
-                  text-slate-400
-                  transition-all duration-300
-                  hover:scale-105
-                  hover:border-cyan-400/30
-                  hover:bg-cyan-400/[0.06]
-                  hover:text-cyan-300
+                  text-[10px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.24em]
+                  text-cyan-300
                 "
               >
-                <ChevronLeft size={19} />
-              </button>
+                Credentials
+              </span>
 
-              <button
-                type="button"
-                onClick={goNext}
-                aria-label="Next certification"
-                className="
-                  flex h-11 w-11
-                  items-center justify-center
-                  rounded-xl
-                  border border-white/[0.08]
-                  bg-white/[0.025]
-                  text-slate-400
-                  transition-all duration-300
-                  hover:scale-105
-                  hover:border-cyan-400/30
-                  hover:bg-cyan-400/[0.06]
-                  hover:text-cyan-300
-                "
-              >
-                <ChevronRight size={19} />
-              </button>
+              <div className="h-px w-7 bg-cyan-400/70" />
             </div>
-          </div>
+
+            <h2
+              className="
+                text-3xl
+                font-bold
+                tracking-tight
+                text-white
+                sm:text-4xl
+              "
+            >
+              Certifications
+            </h2>
+
+            <p
+              className="
+                mx-auto mt-3
+                max-w-xl
+                text-xs
+                leading-6
+                text-slate-500
+                sm:text-sm
+              "
+            >
+              Continuous learning through professional courses
+              and certifications in artificial intelligence,
+              machine learning and data analytics.
+            </p>
+          </motion.div>
 
           {/* ====================================================
               MOBILE ARROWS
+              Removed intentionally:
+              arrows are only displayed beside the carousel
           ==================================================== */}
-
-          <div className="mt-8 flex items-center justify-end gap-2 sm:hidden">
-            <button
-              type="button"
-              onClick={goPrevious}
-              aria-label="Previous certification"
-              className="
-                flex h-10 w-10
-                items-center justify-center
-                rounded-full
-                border border-cyan-400/20
-                bg-[#06101d]/95
-                text-cyan-300
-                shadow-[0_0_20px_rgba(34,211,238,0.08)]
-                backdrop-blur-xl
-              "
-            >
-              <ChevronLeft size={19} />
-            </button>
-
-            <button
-              type="button"
-              onClick={goNext}
-              aria-label="Next certification"
-              className="
-                flex h-10 w-10
-                items-center justify-center
-                rounded-full
-                border border-cyan-400/20
-                bg-[#06101d]/95
-                text-cyan-300
-                shadow-[0_0_20px_rgba(34,211,238,0.08)]
-                backdrop-blur-xl
-              "
-            >
-              <ChevronRight size={19} />
-            </button>
-          </div>
 
           {/* ====================================================
               PREMIUM 3D CAROUSEL
@@ -712,7 +703,7 @@ export default function Certifications() {
             </motion.div>
 
             {/* =================================================
-                LEFT ARROW
+                LEFT SIDE ARROW
             ================================================= */}
 
             <button
@@ -724,7 +715,8 @@ export default function Certifications() {
                 z-50
                 flex h-11 w-11
                 -translate-y-1/2
-                items-center justify-center
+                items-center
+                justify-center
                 rounded-full
                 border border-cyan-400/20
                 bg-[#06101d]/95
@@ -743,7 +735,7 @@ export default function Certifications() {
             </button>
 
             {/* =================================================
-                RIGHT ARROW
+                RIGHT SIDE ARROW
             ================================================= */}
 
             <button
@@ -755,7 +747,8 @@ export default function Certifications() {
                 z-50
                 flex h-11 w-11
                 -translate-y-1/2
-                items-center justify-center
+                items-center
+                justify-center
                 rounded-full
                 border border-cyan-400/20
                 bg-[#06101d]/95
@@ -791,23 +784,25 @@ export default function Certifications() {
               </span>
 
               <div className="flex items-center gap-2">
-                {certifications.map((certification, index) => (
-                  <button
-                    key={certification.title}
-                    type="button"
-                    onClick={() => goTo(index)}
-                    aria-label={`Go to ${certification.title}`}
-                    className={`
-                      h-1.5 rounded-full
-                      transition-all duration-300
-                      ${
-                        index === activeIndex
-                          ? "w-7 bg-cyan-400"
-                          : "w-1.5 bg-white/20 hover:bg-white/40"
-                      }
-                    `}
-                  />
-                ))}
+                {certifications.map(
+                  (certification, index) => (
+                    <button
+                      key={certification.title}
+                      type="button"
+                      onClick={() => goTo(index)}
+                      aria-label={`Go to ${certification.title}`}
+                      className={`
+                        h-1.5 rounded-full
+                        transition-all duration-300
+                        ${
+                          index === activeIndex
+                            ? "w-7 bg-cyan-400"
+                            : "w-1.5 bg-white/20 hover:bg-white/40"
+                        }
+                      `}
+                    />
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -866,7 +861,8 @@ export default function Certifications() {
                   absolute right-4 top-4
                   z-30
                   flex h-10 w-10
-                  items-center justify-center
+                  items-center
+                  justify-center
                   rounded-full
                   border border-white/10
                   bg-black/60
@@ -999,4 +995,3 @@ export default function Certifications() {
     </>
   );
 }
-

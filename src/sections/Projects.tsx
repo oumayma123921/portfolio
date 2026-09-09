@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import SectionTitle from "../components/SectionTitle";
 
 type MediaItem = {
   type: "image" | "video";
@@ -342,23 +341,33 @@ const projects: Project[] = [
 ];
 
 export default function Projects() {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(
-    null
-  );
+  const [selectedProject, setSelectedProject] =
+    useState<Project | null>(null);
+
   const [activeMedia, setActiveMedia] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
   const total = projects.length;
 
+  /* =========================================================
+     PROJECT NAVIGATION
+  ========================================================= */
+
   const goPrevious = () => {
     setDirection(-1);
-    setActiveIndex((current) => (current - 1 + total) % total);
+
+    setActiveIndex(
+      (current) => (current - 1 + total) % total
+    );
   };
 
   const goNext = () => {
     setDirection(1);
-    setActiveIndex((current) => (current + 1) % total);
+
+    setActiveIndex(
+      (current) => (current + 1) % total
+    );
   };
 
   const goTo = (index: number) => {
@@ -367,6 +376,10 @@ export default function Projects() {
     setDirection(index > activeIndex ? 1 : -1);
     setActiveIndex(index);
   };
+
+  /* =========================================================
+     OPEN / CLOSE PROJECT
+  ========================================================= */
 
   const openProject = (project: Project) => {
     setSelectedProject(project);
@@ -378,21 +391,35 @@ export default function Projects() {
     setActiveMedia(0);
   };
 
+  /* =========================================================
+     MEDIA NAVIGATION
+  ========================================================= */
+
   const nextMedia = () => {
     if (!selectedProject) return;
 
-    setActiveMedia((current) =>
-      current === selectedProject.media.length - 1 ? 0 : current + 1
+    setActiveMedia(
+      (current) =>
+        current === selectedProject.media.length - 1
+          ? 0
+          : current + 1
     );
   };
 
   const previousMedia = () => {
     if (!selectedProject) return;
 
-    setActiveMedia((current) =>
-      current === 0 ? selectedProject.media.length - 1 : current - 1
+    setActiveMedia(
+      (current) =>
+        current === 0
+          ? selectedProject.media.length - 1
+          : current - 1
     );
   };
+
+  /* =========================================================
+     KEYBOARD
+  ========================================================= */
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -429,7 +456,11 @@ export default function Projects() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedProject]);
+  }, [selectedProject, activeIndex]);
+
+  /* =========================================================
+     BODY SCROLL LOCK
+  ========================================================= */
 
   useEffect(() => {
     if (selectedProject) {
@@ -443,8 +474,15 @@ export default function Projects() {
     };
   }, [selectedProject]);
 
-  const previousIndex = (activeIndex - 1 + total) % total;
-  const nextIndex = (activeIndex + 1) % total;
+  /* =========================================================
+     ACTIVE PROJECTS
+  ========================================================= */
+
+  const previousIndex =
+    (activeIndex - 1 + total) % total;
+
+  const nextIndex =
+    (activeIndex + 1) % total;
 
   const activeProject = projects[activeIndex];
   const previousProject = projects[previousIndex];
@@ -452,116 +490,106 @@ export default function Projects() {
 
   return (
     <>
-      <section id="projects" className="relative py-28 sm:py-36">
+      {/* =========================================================
+          PROJECTS SECTION
+      ========================================================= */}
+
+      <section
+        id="projects"
+        className="
+          relative
+          overflow-hidden
+          py-28
+          sm:py-36
+        "
+      >
         <div className="mx-auto max-w-7xl px-6">
-          {/* ===================================================== */}
-          {/* HEADER */}
-          {/* ===================================================== */}
 
-          <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-            <SectionTitle
-              eyebrow="Selected Work"
-              title="Projects"
-              description="A selection of projects where I combine software engineering, data, artificial intelligence and gaming."
-            />
+          {/* =====================================================
+              CENTERED HEADER
+          ===================================================== */}
 
-            {/* Desktop arrows */}
-            <div className="hidden shrink-0 items-center gap-2 sm:flex">
-              <button
-                type="button"
-                onClick={goPrevious}
-                aria-label="Previous project"
-                className="
-                  flex h-11 w-11
-                  items-center justify-center
-                  rounded-xl
-                  border border-white/[0.08]
-                  bg-white/[0.025]
-                  text-slate-400
-                  transition-all duration-300
-                  hover:scale-105
-                  hover:border-cyan-400/30
-                  hover:bg-cyan-400/[0.06]
-                  hover:text-cyan-300
-                "
-              >
-                <ChevronLeft size={19} />
-              </button>
+          {/* =====================================================
+                  CENTERED HEADER
+              ===================================================== */}
 
-              <button
-                type="button"
-                onClick={goNext}
-                aria-label="Next project"
-                className="
-                  flex h-11 w-11
-                  items-center justify-center
-                  rounded-xl
-                  border border-white/[0.08]
-                  bg-white/[0.025]
-                  text-slate-400
-                  transition-all duration-300
-                  hover:scale-105
-                  hover:border-cyan-400/30
-                  hover:bg-cyan-400/[0.06]
-                  hover:text-cyan-300
-                "
-              >
-                <ChevronRight size={19} />
-              </button>
-            </div>
-          </div>
-
-          {/* ===================================================== */}
-          {/* MOBILE ARROWS */}
-          {/* ===================================================== */}
-
-          <div className="mt-8 flex items-center justify-end gap-2 sm:hidden">
-            <button
-              type="button"
-              onClick={goPrevious}
-              aria-label="Previous project"
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 15,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.5,
+              }}
               className="
-                flex h-10 w-10
-                items-center justify-center
-                rounded-full
-                border border-white/[0.08]
-                bg-[#06101d]/90
-                text-cyan-300
-                shadow-[0_0_20px_rgba(34,211,238,0.08)]
-                backdrop-blur-xl
+                mx-auto mb-8
+                max-w-2xl
+                text-center
+                sm:mb-10
               "
             >
-              <ChevronLeft size={19} />
-            </button>
+              <div className="mb-3 flex items-center justify-center gap-3">
+                <div className="h-px w-7 bg-cyan-400/70" />
 
-            <button
-              type="button"
-              onClick={goNext}
-              aria-label="Next project"
-              className="
-                flex h-10 w-10
-                items-center justify-center
-                rounded-full
-                border border-white/[0.08]
-                bg-[#06101d]/90
-                text-cyan-300
-                shadow-[0_0_20px_rgba(34,211,238,0.08)]
-                backdrop-blur-xl
-              "
-            >
-              <ChevronRight size={19} />
-            </button>
-          </div>
+                <span
+                  className="
+                    text-[10px]
+                    font-semibold
+                    uppercase
+                    tracking-[0.24em]
+                    text-cyan-300
+                  "
+                >
+                  Selected Work
+                </span>
 
-          {/* ===================================================== */}
-          {/* 3D CAROUSEL */}
-          {/* ===================================================== */}
+                <div className="h-px w-7 bg-cyan-400/70" />
+              </div>
+
+              <h2
+                className="
+                  text-3xl
+                  font-bold
+                  tracking-tight
+                  text-white
+                  sm:text-4xl
+                "
+              >
+                Projects
+              </h2>
+
+              <p
+                className="
+                  mx-auto mt-3
+                  max-w-xl
+                  text-xs
+                  leading-6
+                  text-slate-500
+                  sm:text-sm
+                "
+              >
+                A selection of projects where I combine software engineering, data, artificial intelligence and gaming.
+              </p>
+            </motion.div>
+
+          {/* =====================================================
+                  CAROUSEL STAGE
+              ===================================================== */}
 
           <div
             className="
-              relative mt-10
-              h-[550px]
-              overflow-hidden
+              relative
+              mt-10
+              h-[535px]
+              w-full
+              overflow-visible
               sm:mt-12
               sm:h-[535px]
               lg:h-[525px]
@@ -571,32 +599,43 @@ export default function Projects() {
               transformStyle: "preserve-3d",
             }}
           >
+
             {/* Ambient glow */}
+
             <div
               className="
                 pointer-events-none
-                absolute left-1/2 top-1/2
-                h-[420px] w-[420px]
-                -translate-x-1/2 -translate-y-1/2
+                absolute
+                left-1/2
+                top-1/2
+                h-[420px]
+                w-[420px]
+                -translate-x-1/2
+                -translate-y-1/2
                 rounded-full
                 bg-cyan-400/[0.045]
                 blur-[100px]
               "
             />
 
-            {/* ================================================= */}
-            {/* PREVIOUS CARD */}
-            {/* ================================================= */}
+            {/* =================================================
+                PREVIOUS CARD
+            ================================================= */}
 
             <motion.div
               key={`previous-${previousProject.title}-${activeIndex}`}
               className="
-                absolute left-1/2 top-1/2
+                absolute
+                left-1/2
+                top-1/2
                 hidden
-                h-[410px] w-[410px]
-                -translate-x-1/2 -translate-y-1/2
+                h-[410px]
+                w-[410px]
+                -translate-x-1/2
+                -translate-y-1/2
                 sm:block
-                lg:h-[425px] lg:w-[425px]
+                lg:h-[425px]
+                lg:w-[425px]
               "
               style={{
                 marginLeft: "-330px",
@@ -613,7 +652,7 @@ export default function Projects() {
                 opacity: 0.34,
                 x: 0,
                 rotateY: 22,
-                scale: 0.80,
+                scale: 0.8,
               }}
               transition={{
                 duration: 0.55,
@@ -625,14 +664,19 @@ export default function Projects() {
                 onClick={() => goTo(previousIndex)}
                 className="
                   group
-                  relative h-full w-full
+                  relative
+                  h-full
+                  w-full
                   overflow-hidden
                   rounded-3xl
-                  border border-white/[0.07]
+                  border
+                  border-white/[0.07]
                   bg-[#07111f]
                   text-left
-                  shadow-2xl shadow-black/40
-                  transition-all duration-300
+                  shadow-2xl
+                  shadow-black/40
+                  transition-all
+                  duration-300
                   hover:border-cyan-400/20
                 "
               >
@@ -640,7 +684,8 @@ export default function Projects() {
                   src={previousProject.cover}
                   alt={previousProject.title}
                   className="
-                    h-full w-full
+                    h-full
+                    w-full
                     object-cover
                     opacity-60
                     grayscale-[20%]
@@ -661,19 +706,24 @@ export default function Projects() {
               </button>
             </motion.div>
 
-            {/* ================================================= */}
-            {/* NEXT CARD */}
-            {/* ================================================= */}
+            {/* =================================================
+                NEXT CARD
+            ================================================= */}
 
             <motion.div
               key={`next-${nextProject.title}-${activeIndex}`}
               className="
-                absolute left-1/2 top-1/2
+                absolute
+                left-1/2
+                top-1/2
                 hidden
-                h-[410px] w-[410px]
-                -translate-x-1/2 -translate-y-1/2
+                h-[410px]
+                w-[410px]
+                -translate-x-1/2
+                -translate-y-1/2
                 sm:block
-                lg:h-[425px] lg:w-[425px]
+                lg:h-[425px]
+                lg:w-[425px]
               "
               style={{
                 marginLeft: "330px",
@@ -690,7 +740,7 @@ export default function Projects() {
                 opacity: 0.34,
                 x: 0,
                 rotateY: -22,
-                scale: 0.80,
+                scale: 0.8,
               }}
               transition={{
                 duration: 0.55,
@@ -702,14 +752,19 @@ export default function Projects() {
                 onClick={() => goTo(nextIndex)}
                 className="
                   group
-                  relative h-full w-full
+                  relative
+                  h-full
+                  w-full
                   overflow-hidden
                   rounded-3xl
-                  border border-white/[0.07]
+                  border
+                  border-white/[0.07]
                   bg-[#07111f]
                   text-left
-                  shadow-2xl shadow-black/40
-                  transition-all duration-300
+                  shadow-2xl
+                  shadow-black/40
+                  transition-all
+                  duration-300
                   hover:border-cyan-400/20
                 "
               >
@@ -717,7 +772,8 @@ export default function Projects() {
                   src={nextProject.cover}
                   alt={nextProject.title}
                   className="
-                    h-full w-full
+                    h-full
+                    w-full
                     object-cover
                     opacity-60
                     grayscale-[20%]
@@ -738,19 +794,24 @@ export default function Projects() {
               </button>
             </motion.div>
 
-            {/* ================================================= */}
-            {/* ACTIVE CARD */}
-            {/* ================================================= */}
+            {/* =================================================
+                ACTIVE CARD
+            ================================================= */}
 
-            <AnimatePresence mode="wait" custom={direction}>
+            <AnimatePresence
+              mode="wait"
+              custom={direction}
+            >
               <motion.div
                 key={activeProject.title}
                 custom={direction}
                 className="
-                  absolute left-1/2 top-1/2
+                  absolute
+                  left-1/2
+                  top-1/2
                   z-30
-                  h-[505px]
-                  w-[calc(100%-48px)]
+                  h-[500px]
+                  w-[calc(100%-32px)]
                   max-w-[560px]
                   -translate-x-1/2
                   -translate-y-1/2
@@ -802,28 +863,37 @@ export default function Projects() {
               >
                 <button
                   type="button"
-                  onClick={() => openProject(activeProject)}
+                  onClick={() =>
+                    openProject(activeProject)
+                  }
                   className="
                     group
-                    relative h-full w-full
+                    relative
+                    h-full
+                    w-full
                     overflow-hidden
                     rounded-3xl
-                    border border-cyan-400/[0.14]
+                    border
+                    border-cyan-400/[0.14]
                     bg-[#07111f]
                     text-left
                     shadow-[0_30px_80px_rgba(0,0,0,0.45)]
-                    transition-all duration-500
+                    transition-all
+                    duration-500
                     hover:border-cyan-400/30
                     hover:shadow-[0_30px_90px_rgba(34,211,238,0.10)]
                   "
                 >
-                  {/* Image */}
+
+                  {/* Background image */}
+
                   <div className="absolute inset-0">
                     <img
                       src={activeProject.cover}
                       alt={activeProject.title}
                       className="
-                        h-full w-full
+                        h-full
+                        w-full
                         object-cover
                         transition-transform
                         duration-700
@@ -836,15 +906,19 @@ export default function Projects() {
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(34,211,238,0.10),transparent_35%)]" />
                   </div>
 
-                  {/* Top category */}
+                  {/* Category */}
+
                   <div className="absolute left-5 right-5 top-5 flex items-start justify-between gap-3">
+
                     <div
                       className="
                         max-w-[75%]
                         rounded-full
-                        border border-cyan-400/20
+                        border
+                        border-cyan-400/20
                         bg-[#020914]/65
-                        px-3 py-1.5
+                        px-3
+                        py-1.5
                         text-[9px]
                         font-medium
                         uppercase
@@ -858,14 +932,20 @@ export default function Projects() {
 
                     <div
                       className="
-                        flex h-10 w-10 shrink-0
-                        items-center justify-center
+                        flex
+                        h-10
+                        w-10
+                        shrink-0
+                        items-center
+                        justify-center
                         rounded-full
-                        border border-white/10
+                        border
+                        border-white/10
                         bg-black/40
                         text-white
                         backdrop-blur-xl
-                        transition-all duration-300
+                        transition-all
+                        duration-300
                         group-hover:border-cyan-400/30
                         group-hover:bg-cyan-400/10
                         group-hover:text-cyan-300
@@ -873,11 +953,15 @@ export default function Projects() {
                     >
                       <ArrowUpRight size={17} />
                     </div>
+
                   </div>
 
                   {/* Bottom content */}
+
                   <div className="absolute inset-x-5 bottom-5">
+
                     <div className="max-w-[480px]">
+
                       <h3
                         className="
                           text-2xl
@@ -904,7 +988,9 @@ export default function Projects() {
                       </p>
 
                       {/* Technologies */}
+
                       <div className="mt-4 flex flex-wrap gap-2">
+
                         {activeProject.technologies
                           .slice(0, 3)
                           .map((technology) => (
@@ -912,9 +998,11 @@ export default function Projects() {
                               key={technology}
                               className="
                                 rounded-lg
-                                border border-white/[0.09]
+                                border
+                                border-white/[0.09]
                                 bg-black/30
-                                px-2.5 py-1
+                                px-2.5
+                                py-1
                                 text-[9px]
                                 text-slate-300
                                 backdrop-blur-md
@@ -923,87 +1011,123 @@ export default function Projects() {
                               {technology}
                             </span>
                           ))}
+
                       </div>
 
                       <div className="mt-4 flex items-center gap-2 text-[10px] uppercase tracking-[0.14em] text-cyan-300/80">
                         <span className="h-px w-6 bg-cyan-400/40" />
                         Click to explore
                       </div>
+
                     </div>
+
                   </div>
 
                   {/* Glass border */}
+
                   <div className="pointer-events-none absolute inset-0 rounded-3xl border border-white/[0.05]" />
+
                 </button>
               </motion.div>
             </AnimatePresence>
 
-            {/* ================================================= */}
-            {/* LEFT ARROW */}
-            {/* ================================================= */}
+            {/* =================================================
+                LEFT SIDE ARROW
+            ================================================= */}
 
             <button
               type="button"
               onClick={goPrevious}
               aria-label="Previous project"
               className="
-                absolute left-1 top-1/2
+                absolute
+                left-1
+                top-1/2
                 z-50
-                flex h-11 w-11
+                flex
+                h-10
+                w-10
                 -translate-y-1/2
-                items-center justify-center
+                items-center
+                justify-center
                 rounded-full
-                border border-cyan-400/20
+                border
+                border-cyan-400/20
                 bg-[#06101d]/95
                 text-cyan-300
                 shadow-[0_0_25px_rgba(34,211,238,0.10)]
                 backdrop-blur-xl
-                transition-all duration-300
+                transition-all
+                duration-300
                 hover:scale-110
                 hover:border-cyan-400/50
                 hover:bg-cyan-400/10
                 sm:left-3
+                sm:h-11
+                sm:w-11
                 lg:left-5
               "
             >
-              <ChevronLeft size={21} />
+              <ChevronLeft size={20} />
             </button>
 
-            {/* ================================================= */}
-            {/* RIGHT ARROW */}
-            {/* ================================================= */}
+            {/* =================================================
+                RIGHT SIDE ARROW
+            ================================================= */}
 
             <button
               type="button"
               onClick={goNext}
               aria-label="Next project"
               className="
-                absolute right-1 top-1/2
+                absolute
+                right-1
+                top-1/2
                 z-50
-                flex h-11 w-11
+                flex
+                h-10
+                w-10
                 -translate-y-1/2
-                items-center justify-center
+                items-center
+                justify-center
                 rounded-full
-                border border-cyan-400/20
+                border
+                border-cyan-400/20
                 bg-[#06101d]/95
                 text-cyan-300
                 shadow-[0_0_25px_rgba(34,211,238,0.10)]
                 backdrop-blur-xl
-                transition-all duration-300
+                transition-all
+                duration-300
                 hover:scale-110
                 hover:border-cyan-400/50
                 hover:bg-cyan-400/10
+                sm:right-3
+                sm:h-11
+                sm:w-11
               "
             >
-              <ChevronRight size={21} />
+              <ChevronRight size={20} />
             </button>
+
           </div>
 
-          {/* ===================================================== */}
-          {/* DOTS / INFO */}
-          {/* ===================================================== */}
+          {/* =====================================================
+              CAROUSEL INFO
+          ===================================================== */}
 
-          <div className="mt-3 flex flex-col items-center justify-between gap-5 sm:flex-row">
+          <div
+            className="
+              mt-3
+              flex
+              flex-col
+              items-center
+              justify-between
+              gap-5
+              sm:flex-row
+            "
+          >
+
             <div className="flex items-center gap-3">
               <span className="h-px w-10 bg-cyan-400/40" />
 
@@ -1013,11 +1137,13 @@ export default function Projects() {
             </div>
 
             <div className="flex items-center gap-5">
+
               <span className="hidden text-xs text-slate-600 sm:block">
                 {activeIndex + 1} / {projects.length}
               </span>
 
               <div className="flex items-center gap-2">
+
                 {projects.map((project, index) => (
                   <button
                     key={project.title}
@@ -1025,8 +1151,10 @@ export default function Projects() {
                     onClick={() => goTo(index)}
                     aria-label={`Go to ${project.title}`}
                     className={`
-                      h-1.5 rounded-full
-                      transition-all duration-300
+                      h-1.5
+                      rounded-full
+                      transition-all
+                      duration-300
                       ${
                         index === activeIndex
                           ? "w-7 bg-cyan-400"
@@ -1035,16 +1163,21 @@ export default function Projects() {
                     `}
                   />
                 ))}
+
               </div>
+
             </div>
+
           </div>
 
-          {/* ===================================================== */}
-          {/* GITHUB */}
-          {/* ===================================================== */}
+          {/* =====================================================
+              GITHUB
+          ===================================================== */}
 
           <div className="mt-16 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 sm:p-7">
+
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+
               <div>
                 <p className="text-sm font-medium text-white">
                   Interested in seeing more?
@@ -1060,15 +1193,21 @@ export default function Projects() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  inline-flex items-center gap-2
+                  inline-flex
+                  items-center
+                  gap-2
                   self-start
                   rounded-xl
-                  border border-white/[0.08]
+                  border
+                  border-white/[0.08]
                   bg-white/[0.025]
-                  px-4 py-2.5
-                  text-sm font-medium
+                  px-4
+                  py-2.5
+                  text-sm
+                  font-medium
                   text-slate-300
-                  transition-all duration-300
+                  transition-all
+                  duration-300
                   hover:border-cyan-400/25
                   hover:bg-cyan-400/[0.05]
                   hover:text-cyan-300
@@ -1078,21 +1217,28 @@ export default function Projects() {
                 <span>GitHub</span>
                 <ArrowUpRight size={15} />
               </a>
+
             </div>
+
           </div>
+
         </div>
       </section>
 
-      {/* ========================================================= */}
-      {/* PROJECT MODAL */}
-      {/* ========================================================= */}
+      {/* =========================================================
+          PROJECT MODAL
+      ========================================================= */}
 
       <AnimatePresence>
         {selectedProject && (
           <motion.div
             className="
-              fixed inset-0 z-[100]
-              flex items-center justify-center
+              fixed
+              inset-0
+              z-[100]
+              flex
+              items-center
+              justify-center
               bg-black/80
               p-4
               backdrop-blur-md
@@ -1107,6 +1253,7 @@ export default function Projects() {
               }
             }}
           >
+
             <motion.div
               initial={{
                 opacity: 0,
@@ -1129,33 +1276,45 @@ export default function Projects() {
               }}
               className="
                 relative
-                flex max-h-[92vh]
-                w-full max-w-6xl
+                flex
+                max-h-[92vh]
+                w-full
+                max-w-6xl
                 flex-col
                 overflow-hidden
                 rounded-3xl
-                border border-white/[0.10]
+                border
+                border-white/[0.10]
                 bg-[#07111f]
                 shadow-2xl
                 shadow-black/50
               "
             >
+
               {/* Close */}
+
               <button
                 type="button"
                 onClick={closeProject}
                 aria-label="Close project"
                 className="
-                  absolute right-5 top-5
+                  absolute
+                  right-5
+                  top-5
                   z-20
-                  flex h-10 w-10
-                  items-center justify-center
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
                   rounded-full
-                  border border-white/10
+                  border
+                  border-white/10
                   bg-black/50
                   text-slate-300
                   backdrop-blur-md
-                  transition-all duration-300
+                  transition-all
+                  duration-300
                   hover:border-cyan-400/30
                   hover:bg-cyan-400/10
                   hover:text-cyan-300
@@ -1165,26 +1324,40 @@ export default function Projects() {
               </button>
 
               <div className="overflow-y-auto">
-                {/* ================================================= */}
-                {/* MEDIA */}
-                {/* ================================================= */}
+
+                {/* =================================================
+                    MEDIA VIEWER
+                ================================================= */}
 
                 <div className="relative bg-black">
+
                   <div
                     className="
                       relative
-                      flex min-h-[320px]
-                      items-center justify-center
+                      flex
+                      min-h-[320px]
+                      items-center
+                      justify-center
                       sm:min-h-[500px]
                     "
                   >
-                    {selectedProject.media[activeMedia].type === "video" ? (
+
+                    {selectedProject.media[activeMedia].type ===
+                    "video" ? (
                       <video
-                        key={selectedProject.media[activeMedia].src}
-                        src={selectedProject.media[activeMedia].src}
+                        key={
+                          selectedProject.media[activeMedia].src
+                        }
+                        src={
+                          selectedProject.media[activeMedia].src
+                        }
                         controls
                         playsInline
-                        className="max-h-[560px] w-full object-contain"
+                        className="
+                          max-h-[560px]
+                          w-full
+                          object-contain
+                        "
                       >
                         <track
                           src=""
@@ -1196,16 +1369,24 @@ export default function Projects() {
                       </video>
                     ) : (
                       <img
-                        src={selectedProject.media[activeMedia].src}
+                        src={
+                          selectedProject.media[activeMedia].src
+                        }
                         alt={
-                          selectedProject.media[activeMedia].title ||
+                          selectedProject.media[activeMedia]
+                            .title ||
                           selectedProject.title
                         }
-                        className="max-h-[560px] w-full object-contain"
+                        className="
+                          max-h-[560px]
+                          w-full
+                          object-contain
+                        "
                       />
                     )}
 
-                    {/* Previous */}
+                    {/* Previous media */}
+
                     {selectedProject.media.length > 1 && (
                       <>
                         <button
@@ -1213,12 +1394,18 @@ export default function Projects() {
                           onClick={previousMedia}
                           aria-label="Previous media"
                           className="
-                            absolute left-4 top-1/2
-                            flex h-11 w-11
+                            absolute
+                            left-4
+                            top-1/2
+                            flex
+                            h-11
+                            w-11
                             -translate-y-1/2
-                            items-center justify-center
+                            items-center
+                            justify-center
                             rounded-full
-                            border border-white/10
+                            border
+                            border-white/10
                             bg-black/50
                             text-white
                             backdrop-blur-md
@@ -1231,18 +1418,25 @@ export default function Projects() {
                           <ChevronLeft size={22} />
                         </button>
 
-                        {/* Next */}
+                        {/* Next media */}
+
                         <button
                           type="button"
                           onClick={nextMedia}
                           aria-label="Next media"
                           className="
-                            absolute right-4 top-1/2
-                            flex h-11 w-11
+                            absolute
+                            right-4
+                            top-1/2
+                            flex
+                            h-11
+                            w-11
                             -translate-y-1/2
-                            items-center justify-center
+                            items-center
+                            justify-center
                             rounded-full
-                            border border-white/10
+                            border
+                            border-white/10
                             bg-black/50
                             text-white
                             backdrop-blur-md
@@ -1257,34 +1451,43 @@ export default function Projects() {
                       </>
                     )}
 
-                    {/* Media Counter */}
+                    {/* Counter */}
+
                     <div
                       className="
-                        absolute bottom-4 left-1/2
+                        absolute
+                        bottom-4
+                        left-1/2
                         -translate-x-1/2
                         rounded-full
-                        border border-white/10
+                        border
+                        border-white/10
                         bg-black/50
-                        px-3 py-1.5
+                        px-3
+                        py-1.5
                         text-xs
                         text-slate-300
                         backdrop-blur-md
                       "
                     >
-                      {activeMedia + 1} / {selectedProject.media.length}
+                      {activeMedia + 1} /{" "}
+                      {selectedProject.media.length}
                     </div>
+
                   </div>
 
-                  {/* ================================================= */}
-                  {/* THUMBNAILS */}
-                  {/* ================================================= */}
+                  {/* =================================================
+                      THUMBNAILS
+                  ================================================= */}
 
                   {selectedProject.media.length > 1 && (
                     <div
                       className="
-                        flex gap-3
+                        flex
+                        gap-3
                         overflow-x-auto
-                        border-t border-white/[0.06]
+                        border-t
+                        border-white/[0.06]
                         bg-black/40
                         p-4
                       "
@@ -1292,71 +1495,93 @@ export default function Projects() {
                         scrollbarWidth: "none",
                       }}
                     >
-                      {selectedProject.media.map((media, index) => (
-                        <button
-                          key={media.src}
-                          type="button"
-                          onClick={() => setActiveMedia(index)}
-                          className={`
-                            relative
-                            h-16 w-24
-                            shrink-0
-                            overflow-hidden
-                            rounded-lg
-                            border
-                            transition-all
-                            ${
-                              index === activeMedia
-                                ? "border-cyan-400/70 ring-2 ring-cyan-400/20"
-                                : "border-white/10 opacity-60 hover:opacity-100"
+                      {selectedProject.media.map(
+                        (media, index) => (
+                          <button
+                            key={media.src}
+                            type="button"
+                            onClick={() =>
+                              setActiveMedia(index)
                             }
-                          `}
-                        >
-                          {media.type === "video" ? (
-                            <>
-                              <video
-                                src={media.src}
-                                muted
-                                preload="metadata"
-                                className="h-full w-full object-cover"
-                              />
-
-                              <span className="absolute inset-0 flex items-center justify-center bg-black/30">
-                                <Play
-                                  size={18}
-                                  className="fill-white text-white"
+                            className={`
+                              relative
+                              h-16
+                              w-24
+                              shrink-0
+                              overflow-hidden
+                              rounded-lg
+                              border
+                              transition-all
+                              ${
+                                index === activeMedia
+                                  ? "border-cyan-400/70 ring-2 ring-cyan-400/20"
+                                  : "border-white/10 opacity-60 hover:opacity-100"
+                              }
+                            `}
+                          >
+                            {media.type === "video" ? (
+                              <>
+                                <video
+                                  src={media.src}
+                                  muted
+                                  preload="metadata"
+                                  className="
+                                    h-full
+                                    w-full
+                                    object-cover
+                                  "
                                 />
-                              </span>
-                            </>
-                          ) : (
-                            <img
-                              src={media.src}
-                              alt=""
-                              className="h-full w-full object-cover"
-                            />
-                          )}
-                        </button>
-                      ))}
+
+                                <span className="absolute inset-0 flex items-center justify-center bg-black/30">
+                                  <Play
+                                    size={18}
+                                    className="fill-white text-white"
+                                  />
+                                </span>
+                              </>
+                            ) : (
+                              <img
+                                src={media.src}
+                                alt=""
+                                className="
+                                  h-full
+                                  w-full
+                                  object-cover
+                                "
+                              />
+                            )}
+                          </button>
+                        )
+                      )}
                     </div>
                   )}
+
                 </div>
 
-                {/* ================================================= */}
-                {/* DETAILS */}
-                {/* ================================================= */}
+                {/* =================================================
+                    DETAILS
+                ================================================= */}
 
                 <div className="p-6 sm:p-8 lg:p-10">
+
                   <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
-                    {/* Main */}
+
+                    {/* Main content */}
+
                     <div>
+
                       <div
                         className="
                           mb-3
-                          inline-flex items-center gap-2
+                          inline-flex
+                          items-center
+                          gap-2
                           rounded-full
-                          border border-cyan-400/15
+                          border
+                          border-cyan-400/15
                           bg-cyan-400/[0.05]
-                          px-3 py-1.5
+                          px-3
+                          py-1.5
                           text-[10px]
                           font-medium
                           uppercase
@@ -1394,7 +1619,9 @@ export default function Projects() {
                       </p>
 
                       {/* Skills */}
+
                       <div className="mt-8">
+
                         <h3
                           className="
                             text-sm
@@ -1408,26 +1635,35 @@ export default function Projects() {
                         </h3>
 
                         <div className="mt-4 flex flex-wrap gap-2">
-                          {selectedProject.skills.map((skill) => (
-                            <span
-                              key={skill}
-                              className="
-                                rounded-full
-                                border border-white/[0.08]
-                                bg-white/[0.025]
-                                px-3 py-1.5
-                                text-xs
-                                text-slate-300
-                              "
-                            >
-                              {skill}
-                            </span>
-                          ))}
+
+                          {selectedProject.skills.map(
+                            (skill) => (
+                              <span
+                                key={skill}
+                                className="
+                                  rounded-full
+                                  border
+                                  border-white/[0.08]
+                                  bg-white/[0.025]
+                                  px-3
+                                  py-1.5
+                                  text-xs
+                                  text-slate-300
+                                "
+                              >
+                                {skill}
+                              </span>
+                            )
+                          )}
+
                         </div>
+
                       </div>
 
                       {/* Technologies */}
+
                       <div className="mt-8">
+
                         <h3
                           className="
                             text-sm
@@ -1441,30 +1677,45 @@ export default function Projects() {
                         </h3>
 
                         <div className="mt-4 flex flex-wrap gap-2">
-                          {selectedProject.technologies.map((tech) => (
-                            <span
-                              key={tech}
-                              className="
-                                rounded-full
-                                border border-cyan-400/10
-                                bg-cyan-400/[0.04]
-                                px-3 py-1.5
-                                text-xs
-                                text-cyan-200
-                              "
-                            >
-                              {tech}
-                            </span>
-                          ))}
+
+                          {selectedProject.technologies.map(
+                            (tech) => (
+                              <span
+                                key={tech}
+                                className="
+                                  rounded-full
+                                  border
+                                  border-cyan-400/10
+                                  bg-cyan-400/[0.04]
+                                  px-3
+                                  py-1.5
+                                  text-xs
+                                  text-cyan-200
+                                "
+                              >
+                                {tech}
+                              </span>
+                            )
+                          )}
+
                         </div>
+
                       </div>
+
                     </div>
 
-                    {/* ================================================= */}
-                    {/* SIDE */}
-                    {/* ================================================= */}
+                    {/* =================================================
+                        SIDE INFORMATION
+                    ================================================= */}
 
-                    <div className="lg:border-l lg:border-white/[0.06] lg:pl-8">
+                    <div
+                      className="
+                        lg:border-l
+                        lg:border-white/[0.06]
+                        lg:pl-8
+                      "
+                    >
+
                       <p
                         className="
                           text-xs
@@ -1487,11 +1738,15 @@ export default function Projects() {
                           rel="noreferrer"
                           className="
                             mt-6
-                            flex items-center justify-between
+                            flex
+                            items-center
+                            justify-between
                             rounded-xl
-                            border border-white/[0.08]
+                            border
+                            border-white/[0.08]
                             bg-white/[0.025]
-                            px-4 py-3
+                            px-4
+                            py-3
                             text-sm
                             text-slate-300
                             transition-all
@@ -1516,11 +1771,15 @@ export default function Projects() {
                           rel="noreferrer"
                           className="
                             mt-3
-                            flex items-center justify-between
+                            flex
+                            items-center
+                            justify-between
                             rounded-xl
-                            border border-cyan-400/20
+                            border
+                            border-cyan-400/20
                             bg-cyan-400/[0.05]
-                            px-4 py-3
+                            px-4
+                            py-3
                             text-sm
                             text-cyan-300
                             transition-all
@@ -1536,25 +1795,30 @@ export default function Projects() {
                         className="
                           mt-8
                           rounded-xl
-                          border border-white/[0.06]
+                          border
+                          border-white/[0.06]
                           bg-white/[0.02]
                           p-4
                         "
                       >
                         <p className="text-xs leading-5 text-slate-500">
-                          Use the arrows or keyboard ← → to navigate through
-                          the project media.
+                          Use the arrows or keyboard ← → to
+                          navigate through the project media.
                         </p>
                       </div>
+
                     </div>
+
                   </div>
+
                 </div>
+
               </div>
             </motion.div>
+
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
 }
-

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   Mail,
@@ -7,7 +8,6 @@ import {
   Send,
 } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import SectionTitle from "../components/SectionTitle";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -47,17 +47,82 @@ export default function Contact() {
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-6">
 
-        {/* ================= HEADER ================= */}
-        <SectionTitle
-          eyebrow="Contact"
-          title="Get in Touch"
-          description="Let's discuss your project or just say hello!"
-        />
+        {/* ====================================================
+            HEADER
+        ==================================================== */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 15,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.5,
+          }}
+          className="
+            mx-auto mb-8
+            max-w-2xl
+            text-center
+            sm:mb-10
+          "
+        >
+          <div className="mb-3 flex items-center justify-center gap-3">
+            <div className="h-px w-7 bg-cyan-400/70" />
+
+            <span
+              className="
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.24em]
+                text-cyan-300
+              "
+            >
+              Contact
+            </span>
+
+            <div className="h-px w-7 bg-cyan-400/70" />
+          </div>
+
+          <h2
+            className="
+              text-3xl
+              font-bold
+              tracking-tight
+              text-white
+              sm:text-4xl
+            "
+          >
+            Get in Touch
+          </h2>
+
+          <p
+            className="
+              mx-auto mt-3
+              max-w-xl
+              text-xs
+              leading-6
+              text-slate-500
+              sm:text-sm
+            "
+          >
+            Let's discuss your project or just say hello!
+          </p>
+        </motion.div>
 
         {/* ================= MAIN CONTENT ================= */}
+
         <div className="mt-14 grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10">
 
           {/* ================= LEFT — CONTACT INFORMATION ================= */}
+
           <div className="rounded-3xl border border-white/[0.07] bg-white/[0.025] p-7 sm:p-9">
 
             <div>
@@ -72,6 +137,7 @@ export default function Contact() {
             </div>
 
             {/* ================= EMAIL ================= */}
+
             <a
               href="mailto:oumaima.ibnayyad@usmba.ac.ma"
               className="group mt-8 flex items-start gap-4 border-b border-white/[0.06] pb-5"
@@ -97,6 +163,7 @@ export default function Contact() {
             </a>
 
             {/* ================= LOCATION ================= */}
+
             <div className="flex items-start gap-4 border-b border-white/[0.06] py-5">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.025] text-slate-400">
                 <MapPin size={19} />
@@ -114,6 +181,7 @@ export default function Contact() {
             </div>
 
             {/* ================= OPEN TO ================= */}
+
             <div className="flex items-start gap-4 py-5">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/[0.07] bg-white/[0.025] text-slate-400">
                 <BriefcaseBusiness size={19} />
@@ -131,6 +199,7 @@ export default function Contact() {
             </div>
 
             {/* ================= CONNECT WITH ME ================= */}
+
             <div className="mt-5 border-t border-white/[0.06] pt-6">
               <p className="text-xs uppercase tracking-[0.16em] text-slate-600">
                 Connect with me
@@ -139,6 +208,7 @@ export default function Contact() {
               <div className="mt-4 flex gap-3">
 
                 {/* LINKEDIN */}
+
                 <a
                   href="https://www.linkedin.com/in/oumaima-ibnayyad-3593bb370/"
                   target="_blank"
@@ -150,6 +220,7 @@ export default function Contact() {
                 </a>
 
                 {/* GITHUB */}
+
                 <a
                   href="https://github.com/oumayma123921"
                   target="_blank"
@@ -164,11 +235,13 @@ export default function Contact() {
           </div>
 
           {/* ================= RIGHT — FORM ================= */}
+
           <div className="rounded-3xl border border-white/[0.07] bg-white/[0.025] p-7 sm:p-9">
 
             <form onSubmit={handleSubmit} className="space-y-6">
 
               {/* ================= NAME ================= */}
+
               <div>
                 <label
                   htmlFor="name"
@@ -190,6 +263,7 @@ export default function Contact() {
               </div>
 
               {/* ================= EMAIL ================= */}
+
               <div>
                 <label
                   htmlFor="email"
@@ -211,6 +285,7 @@ export default function Contact() {
               </div>
 
               {/* ================= MESSAGE ================= */}
+
               <div>
                 <label
                   htmlFor="message"
@@ -232,6 +307,7 @@ export default function Contact() {
               </div>
 
               {/* ================= SEND BUTTON ================= */}
+
               <button
                 type="submit"
                 className="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 py-3.5 text-sm font-semibold text-[#041014] transition-all duration-300 hover:bg-cyan-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.18)]"
@@ -250,6 +326,7 @@ export default function Contact() {
         </div>
 
         {/* ================= FOOTER ================= */}
+
         <div className="mt-14 border-t border-white/[0.06] pt-7">
           <p className="text-center text-sm text-slate-600">
             Open to opportunities, collaborations and interesting projects.
@@ -259,4 +336,3 @@ export default function Contact() {
     </section>
   );
 }
-

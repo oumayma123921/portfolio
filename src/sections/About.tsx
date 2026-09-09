@@ -8,7 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import SectionTitle from "../components/SectionTitle";
+
 
 const experiences = [
   {
@@ -176,11 +176,73 @@ export default function About() {
             SECTION HEADER
         ====================================================== */}
 
-        <SectionTitle
-          eyebrow="About Me"
-          title="A multidisciplinary profile driven by data, technology and innovation."
-          description="My academic and practical journey combines data analytics, Business Intelligence, artificial intelligence and software engineering, with a specialization applied to the gaming industry."
-        />
+                  <motion.div
+            initial={{
+              opacity: 0,
+              y: 15,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              duration: 0.5,
+            }}
+            className="
+              mx-auto mb-8
+              max-w-2xl
+              text-center
+              sm:mb-10
+            "
+          >
+            <div className="mb-3 flex items-center justify-center gap-3">
+              <div className="h-px w-7 bg-cyan-400/70" />
+
+              <span
+                className="
+                  text-[10px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.24em]
+                  text-cyan-300
+                "
+              >
+                About Me
+              </span>
+
+              <div className="h-px w-7 bg-cyan-400/70" />
+            </div>
+
+            <h2
+              className="
+                text-3xl
+                font-bold
+                tracking-tight
+                text-white
+                sm:text-4xl
+              "
+            >
+              A multidisciplinary profile driven by data, technology and innovation.
+            </h2>
+
+            <p
+              className="
+                mx-auto mt-3
+                max-w-xl
+                text-xs
+                leading-6
+                text-slate-500
+                sm:text-sm
+              "
+            >
+              My academic and practical journey combines data analytics, Business
+              Intelligence, artificial intelligence and software engineering, with a
+              specialization applied to the gaming industry.
+            </p>
+          </motion.div>
 
         {/* ======================================================
             PROFILE + SPECIALIZATION
