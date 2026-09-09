@@ -2,7 +2,14 @@ import { GraduationCap, ArrowUpRight } from "lucide-react";
 import SectionTitle from "../components/SectionTitle";
 import { education } from "../data/education";
 
+type EducationItem = (typeof education)[number] & {
+  field?: string;
+  description?: string;
+};
+
 export default function Education() {
+  const educationItems = education as EducationItem[];
+
   return (
     <section id="education" className="relative py-28 sm:py-36">
       <div className="mx-auto max-w-7xl px-6">
@@ -17,7 +24,7 @@ export default function Education() {
           <div className="absolute left-[19px] top-0 hidden h-full w-px bg-gradient-to-b from-cyan-400/30 via-white/[0.08] to-transparent md:block" />
 
           <div className="space-y-6">
-            {education.map((item, index) => (
+            {educationItems.map((item, index) => (
               <article
                 key={`${item.degree}-${item.institution}`}
                 className="group relative md:pl-16"
@@ -74,9 +81,11 @@ export default function Education() {
                     </div>
 
                     {/* Description */}
-                    <p className="mt-5 max-w-4xl text-sm leading-7 text-slate-500 sm:text-base">
-                      {item.description}
-                    </p>
+                    {item.description && (
+                      <p className="mt-5 max-w-4xl text-sm leading-7 text-slate-500 sm:text-base">
+                        {item.description}
+                      </p>
+                    )}
 
                     {/* Bottom link */}
                     <div className="mt-7 flex items-center justify-end border-t border-white/[0.06] pt-5">
@@ -98,3 +107,4 @@ export default function Education() {
     </section>
   );
 }
+

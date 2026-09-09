@@ -77,7 +77,6 @@ export default function Skills() {
                     <SkillBadge
                       key={skill.name}
                       name={skill.name}
-                      category={skill.category}
                     />
                   ))}
                 </div>
@@ -139,3 +138,4 @@ export default function Skills() {
     </section>
   );
 }
+

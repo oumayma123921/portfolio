@@ -99,19 +99,14 @@ export default function About() {
   ============================================================ */
 
   const [experienceIndex, setExperienceIndex] = useState(0);
-  const [experienceDirection, setExperienceDirection] = useState(1);
 
   const nextExperience = () => {
-    setExperienceDirection(1);
-
     setExperienceIndex(
       (current) => (current + 1) % experiences.length
     );
   };
 
   const previousExperience = () => {
-    setExperienceDirection(-1);
-
     setExperienceIndex(
       (current) =>
         (current - 1 + experiences.length) % experiences.length
@@ -119,7 +114,6 @@ export default function About() {
   };
 
   const goToExperience = (index: number) => {
-    setExperienceDirection(index > experienceIndex ? 1 : -1);
     setExperienceIndex(index);
   };
 
@@ -128,19 +122,14 @@ export default function About() {
   ============================================================ */
 
   const [educationIndex, setEducationIndex] = useState(0);
-  const [educationDirection, setEducationDirection] = useState(1);
 
   const nextEducation = () => {
-    setEducationDirection(1);
-
     setEducationIndex(
       (current) => (current + 1) % education.length
     );
   };
 
   const previousEducation = () => {
-    setEducationDirection(-1);
-
     setEducationIndex(
       (current) =>
         (current - 1 + education.length) % education.length
@@ -148,7 +137,6 @@ export default function About() {
   };
 
   const goToEducation = (index: number) => {
-    setEducationDirection(index > educationIndex ? 1 : -1);
     setEducationIndex(index);
   };
 
@@ -158,8 +146,6 @@ export default function About() {
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      setExperienceDirection(1);
-
       setExperienceIndex(
         (current) => (current + 1) % experiences.length
       );
@@ -174,8 +160,6 @@ export default function About() {
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      setEducationDirection(1);
-
       setEducationIndex(
         (current) => (current + 1) % education.length
       );
@@ -537,3 +521,4 @@ export default function About() {
     </section>
   );
 }
+

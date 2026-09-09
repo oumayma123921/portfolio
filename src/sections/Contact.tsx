@@ -9,21 +9,6 @@ import {
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import SectionTitle from "../components/SectionTitle";
 
-const contactItems = [
-  {
-    label: "Email",
-    value: "oumaima.ibnayyad@usmba.ac.ma",
-    href: "mailto:oumaima.ibnayyad@usmba.ac.ma",
-    icon: Mail,
-  },
-  {
-    label: "LinkedIn",
-    value: "linkedin.com/in/oumaima-ibnayyad-3593bb370",
-    href: "https://www.linkedin.com/in/oumaima-ibnayyad-3593bb370/",
-    icon: FaLinkedin,
-  },
-];
-
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
