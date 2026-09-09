@@ -119,25 +119,25 @@ export default function Hero() {
             </p>
 
             {/* Buttons */}
-            <div className="mt-8 flex flex-wrap items-center gap-3 sm:mt-9 sm:gap-4">
-              <Button href="#projects">
-                Explore my work
-                <ArrowUpRight size={16} className="ml-2" />
-              </Button>
+          <div className="mt-8 flex flex-wrap items-center gap-3 sm:mt-9 sm:gap-4">
+            <Button href="#projects">
+              Explore my work
+              <ArrowUpRight size={16} className="ml-2" />
+            </Button>
 
-              <Button href="#contact" variant="secondary">
-                Let&apos;s connect
-              </Button>
+            <Button href="#contact" variant="secondary">
+              Let&apos;s connect
+            </Button>
 
-              <a
-                href="/cv/Oumaima_Ibnayyad_CV.pdf"
-                download
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.025] px-5 py-3 text-sm font-medium text-slate-300 transition-all duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
-              >
-                <Download size={16} />
-                <span>Download CV</span>
-              </a>
-            </div>
+            <a
+              href="/cv/Oumaima_Ibnayyad_CV.pdf"
+              download
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.025] px-5 py-3 text-sm font-medium text-slate-300 transition-all duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
+            >
+              <Download size={16} />
+              <span>Download CV</span>
+            </a>
+          </div>
 
             {/* ================= CORE AREAS ================= */}
 
