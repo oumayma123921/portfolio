@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Download } from "lucide-react";
 import Button from "../components/Button";
 
 export default function Hero() {
@@ -128,6 +128,15 @@ export default function Hero() {
               <Button href="#contact" variant="secondary">
                 Let&apos;s connect
               </Button>
+
+              <a
+                href="/cv/Oumaima_Ibnayyad_CV.pdf"
+                download
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.025] px-5 py-3 text-sm font-medium text-slate-300 transition-all duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
+              >
+                <Download size={16} />
+                <span>Download CV</span>
+              </a>
             </div>
 
             {/* ================= CORE AREAS ================= */}
