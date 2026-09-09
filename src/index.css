@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import url("https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css");
+
 
 html {
   scroll-behavior: smooth;

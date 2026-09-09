@@ -3,7 +3,6 @@ export interface Project {
   readonly category: string;
   readonly description: string;
   readonly technologies: string[];
-  readonly featured?: boolean;
   readonly github?: string;
   readonly demo?: string;
 }
@@ -13,7 +12,7 @@ export const projects: Project[] = [
     title: "Gesture-Controlled Game",
     category: "Computer Vision • Gaming",
     description:
-      "Interactive game controlled through real-time hand gestures using computer vision and hand tracking. The project explores the integration of AI-based vision with interactive gameplay.",
+      "Interactive game controlled through real-time hand gestures using computer vision and hand tracking.",
     technologies: [
       "Python",
       "Computer Vision",
@@ -21,15 +20,13 @@ export const projects: Project[] = [
       "AI",
       "Game Development",
     ],
-    featured: true,
     github: "#",
   },
-
   {
     title: "BrainPath",
     category: "AI • Educational Application",
     description:
-      "Interactive educational application combining game-based learning, user management and data analytics. The application connects a Flutter frontend with a Python backend and PostgreSQL database.",
+      "Interactive educational application combining game-based learning, user management and data analytics with a Flutter frontend and Python backend.",
     technologies: [
       "Flutter",
       "Dart",
@@ -38,15 +35,13 @@ export const projects: Project[] = [
       "SQLAlchemy",
       "PostgreSQL",
     ],
-    featured: true,
     github: "#",
   },
-
   {
     title: "Health Prediction using Machine Learning",
     category: "Machine Learning • Data Science",
     description:
-      "Machine learning project for predicting health-related outcomes from structured medical data. Several classification algorithms were implemented and evaluated using standard performance metrics.",
+      "Machine learning project for predicting health-related outcomes from structured datasets using classification algorithms and performance evaluation.",
     technologies: [
       "Python",
       "Pandas",
@@ -55,10 +50,8 @@ export const projects: Project[] = [
       "Machine Learning",
       "Google Colab",
     ],
-    featured: true,
     github: "#",
   },
-
   {
     title: "In-Game Purchase Recommendation System",
     category: "Recommendation Systems • Gaming",
@@ -74,12 +67,11 @@ export const projects: Project[] = [
     ],
     github: "#",
   },
-
   {
     title: "WHISHPER",
     category: "Game Design • Unreal Engine",
     description:
-      "Psychological horror puzzle game developed with Unreal Engine 5. The project focuses on immersive environment design, level design, exploration and puzzle-based gameplay.",
+      "Psychological horror puzzle game developed with Unreal Engine 5, focusing on immersive environment design, level design and puzzle-based gameplay.",
     technologies: [
       "Unreal Engine 5",
       "Blender",
@@ -87,7 +79,19 @@ export const projects: Project[] = [
       "Level Design",
       "Environment Design",
     ],
-    featured: true,
+    github: "#",
+  },
+  {
+    title: "School Archives Management",
+    category: "Web • Desktop Application",
+    description:
+      "Web and desktop application developed as a final year project for managing and organizing school archives.",
+    technologies: [
+      "Application Development",
+      "Database",
+      "Web Development",
+      "Desktop Development",
+    ],
     github: "#",
   },
 ];

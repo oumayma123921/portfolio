@@ -5,10 +5,8 @@ import FuturisticBackground from "./components/FuturisticBackground";
 import Hero from "./sections/Hero";
 import About from "./sections/About";
 import Skills from "./sections/Skills";
-import ProjectsSection from "./sections/Projects";
-import Education from "./sections/Education";
+import Projects from "./sections/Projects";
 import Certifications from "./sections/Certifications";
-import Research from "./sections/Research";
 import Contact from "./sections/Contact";
 
 function App() {
@@ -23,10 +21,8 @@ function App() {
           <Hero />
           <About />
           <Skills />
-          <ProjectsSection />
-          <Education />
+          <Projects />
           <Certifications />
-          <Research />
           <Contact />
         </main>
 
