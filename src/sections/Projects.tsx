@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
@@ -53,7 +51,6 @@ const projects: Project[] = [
       "Application Design",
     ],
     cover: "/projects/stage-management/1.png",
-
     media: [
       {
         type: "image",
@@ -149,59 +146,58 @@ const projects: Project[] = [
       "System Design",
     ],
     cover: "/projects/archivage/02.png",
-
-      media: [
-        {
-          type: "image",
-          src: "/projects/archivage/01.png",
-          title: "Archiving System — Interface 1",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/02.png",
-          title: "Archiving System — Interface 2",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/03.png",
-          title: "Archiving System — Interface 3",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/04.png",
-          title: "Archiving System — Interface 4",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/05.png",
-          title: "Archiving System — Interface 5",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/06.png",
-          title: "Archiving System — Interface 6",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/07.png",
-          title: "Archiving System — Interface 7",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/08.png",
-          title: "Archiving System — Interface 8",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/09.png",
-          title: "Archiving System — Interface 9",
-        },
-        {
-          type: "image",
-          src: "/projects/archivage/10.png",
-          title: "Archiving System — Interface 10",
-        },
-      ],
+    media: [
+      {
+        type: "image",
+        src: "/projects/archivage/01.png",
+        title: "Archiving System — Interface 1",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/02.png",
+        title: "Archiving System — Interface 2",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/03.png",
+        title: "Archiving System — Interface 3",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/04.png",
+        title: "Archiving System — Interface 4",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/05.png",
+        title: "Archiving System — Interface 5",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/06.png",
+        title: "Archiving System — Interface 6",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/07.png",
+        title: "Archiving System — Interface 7",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/08.png",
+        title: "Archiving System — Interface 8",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/09.png",
+        title: "Archiving System — Interface 9",
+      },
+      {
+        type: "image",
+        src: "/projects/archivage/10.png",
+        title: "Archiving System — Interface 10",
+      },
+    ],
   },
 
   {
@@ -224,7 +220,6 @@ const projects: Project[] = [
       "Data Analysis",
     ],
     cover: "/projects/image-processing/01.png",
-
     media: [
       {
         type: "image",
@@ -290,7 +285,7 @@ const projects: Project[] = [
         type: "video",
         src: "/projects/whisper/gameplay.mp4",
         title: "WHISHPER — Gameplay",
-      },  
+      },
     ],
   },
 
@@ -347,8 +342,31 @@ const projects: Project[] = [
 ];
 
 export default function Projects() {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(
+    null
+  );
   const [activeMedia, setActiveMedia] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const total = projects.length;
+
+  const goPrevious = () => {
+    setDirection(-1);
+    setActiveIndex((current) => (current - 1 + total) % total);
+  };
+
+  const goNext = () => {
+    setDirection(1);
+    setActiveIndex((current) => (current + 1) % total);
+  };
+
+  const goTo = (index: number) => {
+    if (index === activeIndex) return;
+
+    setDirection(index > activeIndex ? 1 : -1);
+    setActiveIndex(index);
+  };
 
   const openProject = (project: Project) => {
     setSelectedProject(project);
@@ -378,18 +396,31 @@ export default function Projects() {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!selectedProject) return;
+      if (selectedProject) {
+        if (event.key === "Escape") {
+          closeProject();
+          return;
+        }
 
-      if (event.key === "Escape") {
-        closeProject();
+        if (event.key === "ArrowRight") {
+          nextMedia();
+          return;
+        }
+
+        if (event.key === "ArrowLeft") {
+          previousMedia();
+          return;
+        }
       }
 
-      if (event.key === "ArrowRight") {
-        nextMedia();
-      }
+      if (!selectedProject) {
+        if (event.key === "ArrowRight") {
+          goNext();
+        }
 
-      if (event.key === "ArrowLeft") {
-        previousMedia();
+        if (event.key === "ArrowLeft") {
+          goPrevious();
+        }
       }
     };
 
@@ -412,22 +443,21 @@ export default function Projects() {
     };
   }, [selectedProject]);
 
-  const scrollProjects = (direction: "left" | "right") => {
-    const container = document.getElementById("projects-scroll");
+  const previousIndex = (activeIndex - 1 + total) % total;
+  const nextIndex = (activeIndex + 1) % total;
 
-    if (!container) return;
-
-    container.scrollBy({
-      left: direction === "right" ? 430 : -430,
-      behavior: "smooth",
-    });
-  };
+  const activeProject = projects[activeIndex];
+  const previousProject = projects[previousIndex];
+  const nextProject = projects[nextIndex];
 
   return (
     <>
       <section id="projects" className="relative py-28 sm:py-36">
         <div className="mx-auto max-w-7xl px-6">
-          {/* Header */}
+          {/* ===================================================== */}
+          {/* HEADER */}
+          {/* ===================================================== */}
+
           <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
             <SectionTitle
               eyebrow="Selected Work"
@@ -435,124 +465,584 @@ export default function Projects() {
               description="A selection of projects where I combine software engineering, data, artificial intelligence and gaming."
             />
 
-            <div className="flex shrink-0 gap-2">
+            {/* Desktop arrows */}
+            <div className="hidden shrink-0 items-center gap-2 sm:flex">
               <button
                 type="button"
-                onClick={() => scrollProjects("left")}
-                aria-label="Previous projects"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] text-slate-400 transition-all duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
+                onClick={goPrevious}
+                aria-label="Previous project"
+                className="
+                  flex h-11 w-11
+                  items-center justify-center
+                  rounded-xl
+                  border border-white/[0.08]
+                  bg-white/[0.025]
+                  text-slate-400
+                  transition-all duration-300
+                  hover:scale-105
+                  hover:border-cyan-400/30
+                  hover:bg-cyan-400/[0.06]
+                  hover:text-cyan-300
+                "
               >
-                <ArrowLeft size={18} />
+                <ChevronLeft size={19} />
               </button>
 
               <button
                 type="button"
-                onClick={() => scrollProjects("right")}
-                aria-label="Next projects"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] text-slate-400 transition-all duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
+                onClick={goNext}
+                aria-label="Next project"
+                className="
+                  flex h-11 w-11
+                  items-center justify-center
+                  rounded-xl
+                  border border-white/[0.08]
+                  bg-white/[0.025]
+                  text-slate-400
+                  transition-all duration-300
+                  hover:scale-105
+                  hover:border-cyan-400/30
+                  hover:bg-cyan-400/[0.06]
+                  hover:text-cyan-300
+                "
               >
-                <ArrowRight size={18} />
+                <ChevronRight size={19} />
               </button>
             </div>
           </div>
 
-          {/* Project Cards */}
-          <div
-            id="projects-scroll"
-            className="mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-6"
-            style={{
-              scrollbarWidth: "none",
-            }}
-          >
-            {projects.map((project, index) => (
-              <motion.button
-                key={project.title}
-                type="button"
-                onClick={() => openProject(project)}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  duration: 0.5,
-                  delay: index * 0.08,
-                }}
-                whileHover={{ y: -6 }}
-                className="group w-[82vw] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.025] text-left transition-all duration-300 hover:border-cyan-400/20 hover:bg-white/[0.04] sm:w-[430px]"
-              >
-                {/* Cover */}
-                <div className="relative h-56 overflow-hidden bg-slate-950">
-                  <img
-                    src={project.cover}
-                    alt={project.title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+          {/* ===================================================== */}
+          {/* MOBILE ARROWS */}
+          {/* ===================================================== */}
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#07111f] via-transparent to-transparent" />
+          <div className="mt-8 flex items-center justify-end gap-2 sm:hidden">
+            <button
+              type="button"
+              onClick={goPrevious}
+              aria-label="Previous project"
+              className="
+                flex h-10 w-10
+                items-center justify-center
+                rounded-full
+                border border-white/[0.08]
+                bg-[#06101d]/90
+                text-cyan-300
+                shadow-[0_0_20px_rgba(34,211,238,0.08)]
+                backdrop-blur-xl
+              "
+            >
+              <ChevronLeft size={19} />
+            </button>
 
-                  <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-cyan-300 backdrop-blur-md">
-                    {project.category}
-                  </div>
-
-                  <div className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/40 text-white backdrop-blur-md transition-all duration-300 group-hover:border-cyan-400/30 group-hover:bg-cyan-400/10 group-hover:text-cyan-300">
-                    <ArrowUpRight size={17} />
-                  </div>
-                </div>
-
-                {/* Card Content */}
-                <div className="p-5">
-                  <h3 className="text-xl font-semibold text-white">
-                    {project.title}
-                  </h3>
-
-                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-400">
-                    {project.shortDescription}
-                  </p>
-
-                  <div className="mt-5 flex items-center justify-between">
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.slice(0, 3).map((tech) => (
-                        <span
-                          key={tech}
-                          className="rounded-lg border border-white/[0.07] bg-white/[0.025] px-2.5 py-1 text-[10px] text-slate-400"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-
-                    <span className="ml-3 shrink-0 text-xs font-medium text-cyan-300">
-                      View
-                    </span>
-                  </div>
-                </div>
-              </motion.button>
-            ))}
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next project"
+              className="
+                flex h-10 w-10
+                items-center justify-center
+                rounded-full
+                border border-white/[0.08]
+                bg-[#06101d]/90
+                text-cyan-300
+                shadow-[0_0_20px_rgba(34,211,238,0.08)]
+                backdrop-blur-xl
+              "
+            >
+              <ChevronRight size={19} />
+            </button>
           </div>
 
-          {/* Bottom */}
-          <div className="mt-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="h-px w-12 bg-cyan-400/40" />
+          {/* ===================================================== */}
+          {/* 3D CAROUSEL */}
+          {/* ===================================================== */}
 
-              <span className="text-xs uppercase tracking-[0.18em] text-slate-600">
-                Scroll to explore
+          <div
+            className="
+              relative mt-10
+              h-[550px]
+              overflow-hidden
+              sm:mt-12
+              sm:h-[535px]
+              lg:h-[525px]
+            "
+            style={{
+              perspective: "1400px",
+              transformStyle: "preserve-3d",
+            }}
+          >
+            {/* Ambient glow */}
+            <div
+              className="
+                pointer-events-none
+                absolute left-1/2 top-1/2
+                h-[420px] w-[420px]
+                -translate-x-1/2 -translate-y-1/2
+                rounded-full
+                bg-cyan-400/[0.045]
+                blur-[100px]
+              "
+            />
+
+            {/* ================================================= */}
+            {/* PREVIOUS CARD */}
+            {/* ================================================= */}
+
+            <motion.div
+              key={`previous-${previousProject.title}-${activeIndex}`}
+              className="
+                absolute left-1/2 top-1/2
+                hidden
+                h-[410px] w-[410px]
+                -translate-x-1/2 -translate-y-1/2
+                sm:block
+                lg:h-[425px] lg:w-[425px]
+              "
+              style={{
+                marginLeft: "-330px",
+                transformStyle: "preserve-3d",
+                zIndex: 10,
+              }}
+              initial={{
+                opacity: 0,
+                x: 25,
+                rotateY: 24,
+                scale: 0.78,
+              }}
+              animate={{
+                opacity: 0.34,
+                x: 0,
+                rotateY: 22,
+                scale: 0.80,
+              }}
+              transition={{
+                duration: 0.55,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => goTo(previousIndex)}
+                className="
+                  group
+                  relative h-full w-full
+                  overflow-hidden
+                  rounded-3xl
+                  border border-white/[0.07]
+                  bg-[#07111f]
+                  text-left
+                  shadow-2xl shadow-black/40
+                  transition-all duration-300
+                  hover:border-cyan-400/20
+                "
+              >
+                <img
+                  src={previousProject.cover}
+                  alt={previousProject.title}
+                  className="
+                    h-full w-full
+                    object-cover
+                    opacity-60
+                    grayscale-[20%]
+                  "
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020914] via-[#07111f]/60 to-[#07111f]/20" />
+
+                <div className="absolute inset-x-5 bottom-5">
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-cyan-300/60">
+                    Previous
+                  </p>
+
+                  <h3 className="mt-1 text-lg font-semibold text-white/70">
+                    {previousProject.title}
+                  </h3>
+                </div>
+              </button>
+            </motion.div>
+
+            {/* ================================================= */}
+            {/* NEXT CARD */}
+            {/* ================================================= */}
+
+            <motion.div
+              key={`next-${nextProject.title}-${activeIndex}`}
+              className="
+                absolute left-1/2 top-1/2
+                hidden
+                h-[410px] w-[410px]
+                -translate-x-1/2 -translate-y-1/2
+                sm:block
+                lg:h-[425px] lg:w-[425px]
+              "
+              style={{
+                marginLeft: "330px",
+                transformStyle: "preserve-3d",
+                zIndex: 10,
+              }}
+              initial={{
+                opacity: 0,
+                x: -25,
+                rotateY: -24,
+                scale: 0.78,
+              }}
+              animate={{
+                opacity: 0.34,
+                x: 0,
+                rotateY: -22,
+                scale: 0.80,
+              }}
+              transition={{
+                duration: 0.55,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => goTo(nextIndex)}
+                className="
+                  group
+                  relative h-full w-full
+                  overflow-hidden
+                  rounded-3xl
+                  border border-white/[0.07]
+                  bg-[#07111f]
+                  text-left
+                  shadow-2xl shadow-black/40
+                  transition-all duration-300
+                  hover:border-cyan-400/20
+                "
+              >
+                <img
+                  src={nextProject.cover}
+                  alt={nextProject.title}
+                  className="
+                    h-full w-full
+                    object-cover
+                    opacity-60
+                    grayscale-[20%]
+                  "
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020914] via-[#07111f]/60 to-[#07111f]/20" />
+
+                <div className="absolute inset-x-5 bottom-5">
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-cyan-300/60">
+                    Next
+                  </p>
+
+                  <h3 className="mt-1 text-lg font-semibold text-white/70">
+                    {nextProject.title}
+                  </h3>
+                </div>
+              </button>
+            </motion.div>
+
+            {/* ================================================= */}
+            {/* ACTIVE CARD */}
+            {/* ================================================= */}
+
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={activeProject.title}
+                custom={direction}
+                className="
+                  absolute left-1/2 top-1/2
+                  z-30
+                  h-[505px]
+                  w-[calc(100%-48px)]
+                  max-w-[560px]
+                  -translate-x-1/2
+                  -translate-y-1/2
+                  cursor-grab
+                  active:cursor-grabbing
+                  sm:h-[495px]
+                  sm:w-[520px]
+                  lg:h-[485px]
+                  lg:w-[540px]
+                "
+                initial={{
+                  opacity: 0,
+                  x: direction > 0 ? 70 : -70,
+                  rotateY: direction > 0 ? -8 : 8,
+                  scale: 0.94,
+                }}
+                animate={{
+                  opacity: 1,
+                  x: 0,
+                  rotateY: 0,
+                  scale: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                  x: direction > 0 ? -70 : 70,
+                  rotateY: direction > 0 ? 8 : -8,
+                  scale: 0.94,
+                }}
+                transition={{
+                  duration: 0.48,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                drag="x"
+                dragConstraints={{
+                  left: 0,
+                  right: 0,
+                }}
+                dragElastic={0.16}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -55) {
+                    goNext();
+                  } else if (info.offset.x > 55) {
+                    goPrevious();
+                  }
+                }}
+                style={{
+                  transformStyle: "preserve-3d",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => openProject(activeProject)}
+                  className="
+                    group
+                    relative h-full w-full
+                    overflow-hidden
+                    rounded-3xl
+                    border border-cyan-400/[0.14]
+                    bg-[#07111f]
+                    text-left
+                    shadow-[0_30px_80px_rgba(0,0,0,0.45)]
+                    transition-all duration-500
+                    hover:border-cyan-400/30
+                    hover:shadow-[0_30px_90px_rgba(34,211,238,0.10)]
+                  "
+                >
+                  {/* Image */}
+                  <div className="absolute inset-0">
+                    <img
+                      src={activeProject.cover}
+                      alt={activeProject.title}
+                      className="
+                        h-full w-full
+                        object-cover
+                        transition-transform
+                        duration-700
+                        group-hover:scale-[1.035]
+                      "
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020914] via-[#07111f]/50 to-transparent" />
+
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_15%,rgba(34,211,238,0.10),transparent_35%)]" />
+                  </div>
+
+                  {/* Top category */}
+                  <div className="absolute left-5 right-5 top-5 flex items-start justify-between gap-3">
+                    <div
+                      className="
+                        max-w-[75%]
+                        rounded-full
+                        border border-cyan-400/20
+                        bg-[#020914]/65
+                        px-3 py-1.5
+                        text-[9px]
+                        font-medium
+                        uppercase
+                        tracking-[0.14em]
+                        text-cyan-300
+                        backdrop-blur-xl
+                      "
+                    >
+                      {activeProject.category}
+                    </div>
+
+                    <div
+                      className="
+                        flex h-10 w-10 shrink-0
+                        items-center justify-center
+                        rounded-full
+                        border border-white/10
+                        bg-black/40
+                        text-white
+                        backdrop-blur-xl
+                        transition-all duration-300
+                        group-hover:border-cyan-400/30
+                        group-hover:bg-cyan-400/10
+                        group-hover:text-cyan-300
+                      "
+                    >
+                      <ArrowUpRight size={17} />
+                    </div>
+                  </div>
+
+                  {/* Bottom content */}
+                  <div className="absolute inset-x-5 bottom-5">
+                    <div className="max-w-[480px]">
+                      <h3
+                        className="
+                          text-2xl
+                          font-semibold
+                          tracking-tight
+                          text-white
+                          sm:text-3xl
+                        "
+                      >
+                        {activeProject.title}
+                      </h3>
+
+                      <p
+                        className="
+                          mt-2
+                          max-w-[470px]
+                          text-xs
+                          leading-6
+                          text-slate-300/80
+                          sm:text-sm
+                        "
+                      >
+                        {activeProject.shortDescription}
+                      </p>
+
+                      {/* Technologies */}
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {activeProject.technologies
+                          .slice(0, 3)
+                          .map((technology) => (
+                            <span
+                              key={technology}
+                              className="
+                                rounded-lg
+                                border border-white/[0.09]
+                                bg-black/30
+                                px-2.5 py-1
+                                text-[9px]
+                                text-slate-300
+                                backdrop-blur-md
+                              "
+                            >
+                              {technology}
+                            </span>
+                          ))}
+                      </div>
+
+                      <div className="mt-4 flex items-center gap-2 text-[10px] uppercase tracking-[0.14em] text-cyan-300/80">
+                        <span className="h-px w-6 bg-cyan-400/40" />
+                        Click to explore
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Glass border */}
+                  <div className="pointer-events-none absolute inset-0 rounded-3xl border border-white/[0.05]" />
+                </button>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* ================================================= */}
+            {/* LEFT ARROW */}
+            {/* ================================================= */}
+
+            <button
+              type="button"
+              onClick={goPrevious}
+              aria-label="Previous project"
+              className="
+                absolute left-1 top-1/2
+                z-50
+                flex h-11 w-11
+                -translate-y-1/2
+                items-center justify-center
+                rounded-full
+                border border-cyan-400/20
+                bg-[#06101d]/95
+                text-cyan-300
+                shadow-[0_0_25px_rgba(34,211,238,0.10)]
+                backdrop-blur-xl
+                transition-all duration-300
+                hover:scale-110
+                hover:border-cyan-400/50
+                hover:bg-cyan-400/10
+                sm:left-3
+                lg:left-5
+              "
+            >
+              <ChevronLeft size={21} />
+            </button>
+
+            {/* ================================================= */}
+            {/* RIGHT ARROW */}
+            {/* ================================================= */}
+
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next project"
+              className="
+                absolute right-1 top-1/2
+                z-50
+                flex h-11 w-11
+                -translate-y-1/2
+                items-center justify-center
+                rounded-full
+                border border-cyan-400/20
+                bg-[#06101d]/95
+                text-cyan-300
+                shadow-[0_0_25px_rgba(34,211,238,0.10)]
+                backdrop-blur-xl
+                transition-all duration-300
+                hover:scale-110
+                hover:border-cyan-400/50
+                hover:bg-cyan-400/10
+              "
+            >
+              <ChevronRight size={21} />
+            </button>
+          </div>
+
+          {/* ===================================================== */}
+          {/* DOTS / INFO */}
+          {/* ===================================================== */}
+
+          <div className="mt-3 flex flex-col items-center justify-between gap-5 sm:flex-row">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-10 bg-cyan-400/40" />
+
+              <span className="text-[10px] uppercase tracking-[0.18em] text-slate-600">
+                Drag or use arrows to explore
               </span>
             </div>
 
-            <div className="flex items-center gap-4 text-slate-600">
-              <span className="hidden text-xs sm:block">
-                {projects.length} projects
+            <div className="flex items-center gap-5">
+              <span className="hidden text-xs text-slate-600 sm:block">
+                {activeIndex + 1} / {projects.length}
               </span>
 
               <div className="flex items-center gap-2">
-                <ArrowLeft size={14} />
-                <ArrowRight size={14} />
+                {projects.map((project, index) => (
+                  <button
+                    key={project.title}
+                    type="button"
+                    onClick={() => goTo(index)}
+                    aria-label={`Go to ${project.title}`}
+                    className={`
+                      h-1.5 rounded-full
+                      transition-all duration-300
+                      ${
+                        index === activeIndex
+                          ? "w-7 bg-cyan-400"
+                          : "w-1.5 bg-white/20 hover:bg-white/40"
+                      }
+                    `}
+                  />
+                ))}
               </div>
             </div>
           </div>
 
-          {/* GitHub */}
-          {/* GitHub */}
+          {/* ===================================================== */}
+          {/* GITHUB */}
+          {/* ===================================================== */}
+
           <div className="mt-16 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 sm:p-7">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
@@ -569,7 +1059,20 @@ export default function Projects() {
                 href="https://github.com/oumayma123921"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 self-start rounded-xl border border-white/[0.08] bg-white/[0.025] px-4 py-2.5 text-sm font-medium text-slate-300 transition-all duration-300 hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
+                className="
+                  inline-flex items-center gap-2
+                  self-start
+                  rounded-xl
+                  border border-white/[0.08]
+                  bg-white/[0.025]
+                  px-4 py-2.5
+                  text-sm font-medium
+                  text-slate-300
+                  transition-all duration-300
+                  hover:border-cyan-400/25
+                  hover:bg-cyan-400/[0.05]
+                  hover:text-cyan-300
+                "
               >
                 <FaGithub size={17} />
                 <span>GitHub</span>
@@ -587,7 +1090,14 @@ export default function Projects() {
       <AnimatePresence>
         {selectedProject && (
           <motion.div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md sm:p-6"
+            className="
+              fixed inset-0 z-[100]
+              flex items-center justify-center
+              bg-black/80
+              p-4
+              backdrop-blur-md
+              sm:p-6
+            "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -598,29 +1108,76 @@ export default function Projects() {
             }}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 20 }}
+              initial={{
+                opacity: 0,
+                scale: 0.96,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.96,
+                y: 20,
+              }}
               transition={{
                 duration: 0.3,
                 ease: "easeOut",
               }}
-              className="relative flex max-h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-white/[0.10] bg-[#07111f] shadow-2xl shadow-black/50"
+              className="
+                relative
+                flex max-h-[92vh]
+                w-full max-w-6xl
+                flex-col
+                overflow-hidden
+                rounded-3xl
+                border border-white/[0.10]
+                bg-[#07111f]
+                shadow-2xl
+                shadow-black/50
+              "
             >
               {/* Close */}
               <button
                 type="button"
                 onClick={closeProject}
                 aria-label="Close project"
-                className="absolute right-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-black/50 text-slate-300 backdrop-blur-md transition-all duration-300 hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-300"
+                className="
+                  absolute right-5 top-5
+                  z-20
+                  flex h-10 w-10
+                  items-center justify-center
+                  rounded-full
+                  border border-white/10
+                  bg-black/50
+                  text-slate-300
+                  backdrop-blur-md
+                  transition-all duration-300
+                  hover:border-cyan-400/30
+                  hover:bg-cyan-400/10
+                  hover:text-cyan-300
+                "
               >
                 <X size={18} />
               </button>
 
               <div className="overflow-y-auto">
-                {/* Media */}
+                {/* ================================================= */}
+                {/* MEDIA */}
+                {/* ================================================= */}
+
                 <div className="relative bg-black">
-                  <div className="relative flex min-h-[320px] items-center justify-center sm:min-h-[500px]">
+                  <div
+                    className="
+                      relative
+                      flex min-h-[320px]
+                      items-center justify-center
+                      sm:min-h-[500px]
+                    "
+                  >
                     {selectedProject.media[activeMedia].type === "video" ? (
                       <video
                         key={selectedProject.media[activeMedia].src}
@@ -655,7 +1212,21 @@ export default function Projects() {
                           type="button"
                           onClick={previousMedia}
                           aria-label="Previous media"
-                          className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white backdrop-blur-md transition-all hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-300"
+                          className="
+                            absolute left-4 top-1/2
+                            flex h-11 w-11
+                            -translate-y-1/2
+                            items-center justify-center
+                            rounded-full
+                            border border-white/10
+                            bg-black/50
+                            text-white
+                            backdrop-blur-md
+                            transition-all
+                            hover:border-cyan-400/30
+                            hover:bg-cyan-400/10
+                            hover:text-cyan-300
+                          "
                         >
                           <ChevronLeft size={22} />
                         </button>
@@ -665,7 +1236,21 @@ export default function Projects() {
                           type="button"
                           onClick={nextMedia}
                           aria-label="Next media"
-                          className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white backdrop-blur-md transition-all hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-cyan-300"
+                          className="
+                            absolute right-4 top-1/2
+                            flex h-11 w-11
+                            -translate-y-1/2
+                            items-center justify-center
+                            rounded-full
+                            border border-white/10
+                            bg-black/50
+                            text-white
+                            backdrop-blur-md
+                            transition-all
+                            hover:border-cyan-400/30
+                            hover:bg-cyan-400/10
+                            hover:text-cyan-300
+                          "
                         >
                           <ChevronRight size={22} />
                         </button>
@@ -673,24 +1258,59 @@ export default function Projects() {
                     )}
 
                     {/* Media Counter */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/10 bg-black/50 px-3 py-1.5 text-xs text-slate-300 backdrop-blur-md">
+                    <div
+                      className="
+                        absolute bottom-4 left-1/2
+                        -translate-x-1/2
+                        rounded-full
+                        border border-white/10
+                        bg-black/50
+                        px-3 py-1.5
+                        text-xs
+                        text-slate-300
+                        backdrop-blur-md
+                      "
+                    >
                       {activeMedia + 1} / {selectedProject.media.length}
                     </div>
                   </div>
 
-                  {/* Thumbnails */}
+                  {/* ================================================= */}
+                  {/* THUMBNAILS */}
+                  {/* ================================================= */}
+
                   {selectedProject.media.length > 1 && (
-                    <div className="flex gap-3 overflow-x-auto border-t border-white/[0.06] bg-black/40 p-4">
+                    <div
+                      className="
+                        flex gap-3
+                        overflow-x-auto
+                        border-t border-white/[0.06]
+                        bg-black/40
+                        p-4
+                      "
+                      style={{
+                        scrollbarWidth: "none",
+                      }}
+                    >
                       {selectedProject.media.map((media, index) => (
                         <button
                           key={media.src}
                           type="button"
                           onClick={() => setActiveMedia(index)}
-                          className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg border transition-all ${
-                            index === activeMedia
-                              ? "border-cyan-400/70 ring-2 ring-cyan-400/20"
-                              : "border-white/10 opacity-60 hover:opacity-100"
-                          }`}
+                          className={`
+                            relative
+                            h-16 w-24
+                            shrink-0
+                            overflow-hidden
+                            rounded-lg
+                            border
+                            transition-all
+                            ${
+                              index === activeMedia
+                                ? "border-cyan-400/70 ring-2 ring-cyan-400/20"
+                                : "border-white/10 opacity-60 hover:opacity-100"
+                            }
+                          `}
                         >
                           {media.type === "video" ? (
                             <>
@@ -702,7 +1322,10 @@ export default function Projects() {
                               />
 
                               <span className="absolute inset-0 flex items-center justify-center bg-black/30">
-                                <Play size={18} className="fill-white text-white" />
+                                <Play
+                                  size={18}
+                                  className="fill-white text-white"
+                                />
                               </span>
                             </>
                           ) : (
@@ -718,27 +1341,69 @@ export default function Projects() {
                   )}
                 </div>
 
-                {/* Details */}
+                {/* ================================================= */}
+                {/* DETAILS */}
+                {/* ================================================= */}
+
                 <div className="p-6 sm:p-8 lg:p-10">
                   <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
                     {/* Main */}
                     <div>
-                      <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-cyan-400/15 bg-cyan-400/[0.05] px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-cyan-300">
+                      <div
+                        className="
+                          mb-3
+                          inline-flex items-center gap-2
+                          rounded-full
+                          border border-cyan-400/15
+                          bg-cyan-400/[0.05]
+                          px-3 py-1.5
+                          text-[10px]
+                          font-medium
+                          uppercase
+                          tracking-[0.15em]
+                          text-cyan-300
+                        "
+                      >
                         <ImageIcon size={13} />
                         {selectedProject.category}
                       </div>
 
-                      <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                      <h2
+                        className="
+                          text-3xl
+                          font-semibold
+                          tracking-tight
+                          text-white
+                          sm:text-4xl
+                        "
+                      >
                         {selectedProject.title}
                       </h2>
 
-                      <p className="mt-5 max-w-3xl text-sm leading-7 text-slate-400 sm:text-base">
+                      <p
+                        className="
+                          mt-5
+                          max-w-3xl
+                          text-sm
+                          leading-7
+                          text-slate-400
+                          sm:text-base
+                        "
+                      >
                         {selectedProject.description}
                       </p>
 
                       {/* Skills */}
                       <div className="mt-8">
-                        <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-white">
+                        <h3
+                          className="
+                            text-sm
+                            font-semibold
+                            uppercase
+                            tracking-[0.14em]
+                            text-white
+                          "
+                        >
                           Skills
                         </h3>
 
@@ -746,7 +1411,14 @@ export default function Projects() {
                           {selectedProject.skills.map((skill) => (
                             <span
                               key={skill}
-                              className="rounded-full border border-white/[0.08] bg-white/[0.025] px-3 py-1.5 text-xs text-slate-300"
+                              className="
+                                rounded-full
+                                border border-white/[0.08]
+                                bg-white/[0.025]
+                                px-3 py-1.5
+                                text-xs
+                                text-slate-300
+                              "
                             >
                               {skill}
                             </span>
@@ -756,7 +1428,15 @@ export default function Projects() {
 
                       {/* Technologies */}
                       <div className="mt-8">
-                        <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-white">
+                        <h3
+                          className="
+                            text-sm
+                            font-semibold
+                            uppercase
+                            tracking-[0.14em]
+                            text-white
+                          "
+                        >
                           Technologies
                         </h3>
 
@@ -764,7 +1444,14 @@ export default function Projects() {
                           {selectedProject.technologies.map((tech) => (
                             <span
                               key={tech}
-                              className="rounded-full border border-cyan-400/10 bg-cyan-400/[0.04] px-3 py-1.5 text-xs text-cyan-200"
+                              className="
+                                rounded-full
+                                border border-cyan-400/10
+                                bg-cyan-400/[0.04]
+                                px-3 py-1.5
+                                text-xs
+                                text-cyan-200
+                              "
                             >
                               {tech}
                             </span>
@@ -773,9 +1460,19 @@ export default function Projects() {
                       </div>
                     </div>
 
-                    {/* Side */}
+                    {/* ================================================= */}
+                    {/* SIDE */}
+                    {/* ================================================= */}
+
                     <div className="lg:border-l lg:border-white/[0.06] lg:pl-8">
-                      <p className="text-xs uppercase tracking-[0.16em] text-slate-600">
+                      <p
+                        className="
+                          text-xs
+                          uppercase
+                          tracking-[0.16em]
+                          text-slate-600
+                        "
+                      >
                         Project
                       </p>
 
@@ -788,7 +1485,20 @@ export default function Projects() {
                           href={selectedProject.github}
                           target="_blank"
                           rel="noreferrer"
-                          className="mt-6 flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.025] px-4 py-3 text-sm text-slate-300 transition-all hover:border-cyan-400/25 hover:bg-cyan-400/[0.05] hover:text-cyan-300"
+                          className="
+                            mt-6
+                            flex items-center justify-between
+                            rounded-xl
+                            border border-white/[0.08]
+                            bg-white/[0.025]
+                            px-4 py-3
+                            text-sm
+                            text-slate-300
+                            transition-all
+                            hover:border-cyan-400/25
+                            hover:bg-cyan-400/[0.05]
+                            hover:text-cyan-300
+                          "
                         >
                           <span className="flex items-center gap-2">
                             <FaGithub size={17} />
@@ -804,14 +1514,33 @@ export default function Projects() {
                           href={selectedProject.demo}
                           target="_blank"
                           rel="noreferrer"
-                          className="mt-3 flex items-center justify-between rounded-xl border border-cyan-400/20 bg-cyan-400/[0.05] px-4 py-3 text-sm text-cyan-300 transition-all hover:bg-cyan-400/[0.10]"
+                          className="
+                            mt-3
+                            flex items-center justify-between
+                            rounded-xl
+                            border border-cyan-400/20
+                            bg-cyan-400/[0.05]
+                            px-4 py-3
+                            text-sm
+                            text-cyan-300
+                            transition-all
+                            hover:bg-cyan-400/[0.10]
+                          "
                         >
                           <span>Live Demo</span>
                           <ArrowUpRight size={16} />
                         </a>
                       )}
 
-                      <div className="mt-8 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
+                      <div
+                        className="
+                          mt-8
+                          rounded-xl
+                          border border-white/[0.06]
+                          bg-white/[0.02]
+                          p-4
+                        "
+                      >
                         <p className="text-xs leading-5 text-slate-500">
                           Use the arrows or keyboard ← → to navigate through
                           the project media.
@@ -828,3 +1557,4 @@ export default function Projects() {
     </>
   );
 }
+

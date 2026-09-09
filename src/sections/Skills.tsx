@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Brain,
   Code2,
@@ -7,6 +8,8 @@ import {
   Gamepad2,
   Cpu,
   Layers3,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 import {
@@ -285,6 +288,10 @@ const categories: Category[] = [
   },
 ];
 
+/* ============================================================
+   TOOL LOGO
+============================================================ */
+
 function ToolLogo({ tool }: Readonly<{ tool: Tool }>) {
   if (tool.image) {
     return (
@@ -310,272 +317,692 @@ function ToolLogo({ tool }: Readonly<{ tool: Tool }>) {
   return null;
 }
 
+/* ============================================================
+   CARD
+============================================================ */
+
 function CategoryCard({
   category,
-  index,
+  active,
 }: Readonly<{
   category: Category;
-  index: number;
+  active: boolean;
 }>) {
   return (
     <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
+      animate={{
+        scale: active ? 1 : 0.82,
+        opacity: active ? 1 : 0.32,
+        filter: active ? "blur(0px)" : "blur(3px)",
+      }}
       transition={{
         duration: 0.45,
-        delay: index * 0.05,
+        ease: [0.22, 1, 0.36, 1],
       }}
-      whileHover={{ y: -4 }}
-      className="
-        group
-        overflow-hidden
-        rounded-2xl
-        border
-        border-white/10
-        bg-white/[0.035]
-        p-5
-        backdrop-blur-xl
-        transition-all
-        duration-300
-        hover:border-cyan-400/30
-        hover:bg-white/[0.055]
-        hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]
-      "
+      className={`
+        relative h-full w-full overflow-hidden rounded-[24px]
+        border backdrop-blur-2xl
+        ${
+          active
+            ? "border-cyan-400/25 bg-[#07111f]/90 shadow-[0_20px_70px_rgba(0,0,0,0.5),0_0_45px_rgba(34,211,238,0.08)]"
+            : "border-white/[0.06] bg-[#030712]/80"
+        }
+      `}
     >
-      {/* Header */}
-      <div className="mb-5 flex items-start gap-3">
+      {/* Ambient glow */}
+      {active && (
+        <>
+          <div className="pointer-events-none absolute -right-24 -top-24 h-52 w-52 rounded-full bg-cyan-400/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-24 h-52 w-52 rounded-full bg-blue-600/10 blur-3xl" />
+        </>
+      )}
+
+      <div className="relative flex h-full flex-col p-5 sm:p-6">
+
+        {/* Header */}
+        <div className="flex items-start gap-3.5">
+          <div
+            className={`
+              flex h-10 w-10 shrink-0 items-center justify-center
+              rounded-xl border
+              ${
+                active
+                  ? "border-cyan-400/25 bg-cyan-400/10 text-cyan-300"
+                  : "border-white/[0.06] bg-white/[0.025] text-slate-500"
+              }
+            `}
+          >
+            {category.icon}
+          </div>
+
+          <div className="min-w-0">
+            <h3
+              className={`text-lg font-bold tracking-tight sm:text-xl ${
+                active ? "text-white" : "text-slate-400"
+              }`}
+            >
+              {category.name}
+            </h3>
+
+            <p
+              className={`mt-1 text-[11px] leading-4 sm:text-xs sm:leading-5 ${
+                active ? "text-slate-400" : "text-slate-600"
+              }`}
+            >
+              {category.description}
+            </p>
+          </div>
+        </div>
+
+        {/* Divider */}
         <div
-          className="
-            flex
-            h-10
-            w-10
-            shrink-0
-            items-center
-            justify-center
-            rounded-xl
-            border
-            border-cyan-400/20
-            bg-cyan-400/10
-            text-cyan-300
-          "
-        >
-          {category.icon}
-        </div>
+          className={`my-5 h-px ${
+            active
+              ? "bg-gradient-to-r from-cyan-400/30 via-white/[0.08] to-transparent"
+              : "bg-white/[0.04]"
+          }`}
+        />
 
-        <div className="min-w-0">
-          <h3 className="text-lg font-bold tracking-tight text-white">
-            {category.name}
-          </h3>
+        {/* Skills */}
+        <div className="flex-1">
+          <div className="mb-3 flex items-center gap-2">
+            <Layers3
+              size={14}
+              className={active ? "text-cyan-300" : "text-slate-600"}
+            />
 
-          <p className="mt-1 text-xs leading-5 text-slate-400">
-            {category.description}
-          </p>
-        </div>
-      </div>
-
-      {/* Skills */}
-      <div className="mb-5">
-        <div className="mb-2.5 flex items-center gap-2">
-          <Layers3 size={14} className="text-cyan-300" />
-
-          <h4 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-300">
-            Skills
-          </h4>
-        </div>
-
-        <div className="flex flex-wrap gap-1.5">
-          {category.skills.map((skill) => (
-            <span
-              key={skill}
-              className="
-                rounded-full
-                border
-                border-white/10
-                bg-white/[0.045]
-                px-2.5
-                py-1
-                text-[11px]
-                font-medium
-                text-slate-300
-                transition-colors
-                duration-200
-                hover:border-cyan-400/30
-                hover:text-cyan-200
-              "
+            <h4
+              className={`text-[10px] font-semibold uppercase tracking-[0.18em] ${
+                active ? "text-slate-300" : "text-slate-600"
+              }`}
             >
-              {skill}
-            </span>
-          ))}
+              Skills
+            </h4>
+          </div>
+
+          <div className="flex flex-wrap gap-1.5">
+            {category.skills.map((skill) => (
+              <span
+                key={skill}
+                className={`
+                  rounded-full border px-2.5 py-1 text-[10px] font-medium
+                  ${
+                    active
+                      ? "border-white/[0.09] bg-white/[0.045] text-slate-300 hover:border-cyan-400/30 hover:text-cyan-200"
+                      : "border-white/[0.04] bg-white/[0.015] text-slate-600"
+                  }
+                `}
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Tools */}
-      <div>
-        <div className="mb-2.5 flex items-center gap-2">
-          <Cpu size={14} className="text-cyan-300" />
+        {/* Tools */}
+        <div className="mt-5">
+          <div className="mb-3 flex items-center gap-2">
+            <Cpu
+              size={14}
+              className={active ? "text-cyan-300" : "text-slate-600"}
+            />
 
-          <h4 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-300">
-            Tools & Technologies
-          </h4>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {category.tools.map((tool) => (
-            <div
-              key={tool.name}
-              title={tool.name}
-              className="
-                flex
-                h-9
-                w-9
-                cursor-pointer
-                items-center
-                justify-center
-                rounded-lg
-                border
-                border-white/10
-                bg-black/20
-                transition-all
-                duration-200
-                hover:scale-110
-                hover:border-cyan-400/40
-                hover:bg-white/[0.08]
-                hover:shadow-[0_0_16px_rgba(34,211,238,0.12)]
-              "
+            <h4
+              className={`text-[10px] font-semibold uppercase tracking-[0.18em] ${
+                active ? "text-slate-300" : "text-slate-600"
+              }`}
             >
-              <ToolLogo tool={tool} />
-            </div>
-          ))}
+              Tools & Technologies
+            </h4>
+          </div>
+
+          <div className="flex flex-wrap gap-1.5">
+            {category.tools.map((tool) => (
+              <div
+                key={tool.name}
+                title={tool.name}
+                className={`
+                  flex h-8 w-8 items-center justify-center rounded-lg border
+                  ${
+                    active
+                      ? "border-white/[0.08] bg-black/25 hover:scale-110 hover:border-cyan-400/40 hover:bg-white/[0.07]"
+                      : "border-white/[0.04] bg-black/20"
+                  }
+                `}
+              >
+                <ToolLogo tool={tool} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      {active && (
+        <div className="pointer-events-none absolute bottom-0 left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent" />
+      )}
     </motion.article>
   );
 }
 
+/* ============================================================
+   SKILLS
+============================================================ */
+
 export default function Skills() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const total = categories.length;
+
+  const goPrevious = () => {
+    setDirection(-1);
+    setActiveIndex((current) => (current - 1 + total) % total);
+  };
+
+  const goNext = () => {
+    setDirection(1);
+    setActiveIndex((current) => (current + 1) % total);
+  };
+
+  const goTo = (index: number) => {
+    setDirection(index > activeIndex ? 1 : -1);
+    setActiveIndex(index);
+  };
+
+  /* Keyboard navigation */
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") goPrevious();
+      if (event.key === "ArrowRight") goNext();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
+
+  const previousIndex = (activeIndex - 1 + total) % total;
+  const nextIndex = (activeIndex + 1) % total;
+
   return (
     <section
       id="skills"
-      className="relative overflow-hidden py-20"
+      className="relative overflow-hidden bg-[#020617] py-20 sm:py-24"
     >
-      {/* Background decoration */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[8%] top-[15%] h-48 w-48 rounded-full bg-cyan-500/5 blur-3xl" />
+      {/* ======================================================
+          BACKGROUND
+      ====================================================== */}
 
-        <div className="absolute bottom-[15%] right-[8%] h-60 w-60 rounded-full bg-blue-500/5 blur-3xl" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+
+        <div className="absolute left-1/2 top-1/2 h-[550px] w-[550px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/[0.035] blur-[120px]" />
+
+        <div className="absolute -left-40 top-1/4 h-72 w-72 rounded-full bg-blue-600/[0.045] blur-[110px]" />
+
+        <div className="absolute -right-40 bottom-1/4 h-72 w-72 rounded-full bg-purple-600/[0.035] blur-[110px]" />
+
+        {/* Grid */}
+        <div
+          className="
+            absolute inset-0 opacity-[0.13]
+            [background-image:linear-gradient(rgba(56,189,248,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(56,189,248,0.08)_1px,transparent_1px)]
+            [background-size:75px_75px]
+            [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_75%)]
+          "
+        />
+
+        {/* Network lines */}
+        <svg
+          className="absolute inset-0 h-full w-full opacity-[0.1]"
+          preserveAspectRatio="none"
+        >
+          <line
+            x1="4%"
+            y1="22%"
+            x2="25%"
+            y2="37%"
+            stroke="rgb(56 189 248)"
+            strokeWidth="1"
+          />
+
+          <line
+            x1="25%"
+            y1="37%"
+            x2="48%"
+            y2="18%"
+            stroke="rgb(56 189 248)"
+            strokeWidth="1"
+          />
+
+          <line
+            x1="52%"
+            y1="20%"
+            x2="75%"
+            y2="38%"
+            stroke="rgb(96 165 250)"
+            strokeWidth="1"
+          />
+
+          <line
+            x1="75%"
+            y1="38%"
+            x2="96%"
+            y2="20%"
+            stroke="rgb(56 189 248)"
+            strokeWidth="1"
+          />
+
+          <line
+            x1="5%"
+            y1="78%"
+            x2="28%"
+            y2="61%"
+            stroke="rgb(96 165 250)"
+            strokeWidth="1"
+          />
+
+          <line
+            x1="28%"
+            y1="61%"
+            x2="51%"
+            y2="80%"
+            stroke="rgb(56 189 248)"
+            strokeWidth="1"
+          />
+
+          <line
+            x1="51%"
+            y1="80%"
+            x2="75%"
+            y2="61%"
+            stroke="rgb(56 189 248)"
+            strokeWidth="1"
+          />
+
+          <line
+            x1="75%"
+            y1="61%"
+            x2="95%"
+            y2="78%"
+            stroke="rgb(96 165 250)"
+            strokeWidth="1"
+          />
+        </svg>
+
+        {/* Particles */}
+        {[...Array(14)].map((_, index) => (
+          <motion.span
+            key={index}
+            className="absolute h-1 w-1 rounded-full bg-cyan-300/40"
+            style={{
+              left: `${5 + ((index * 19) % 90)}%`,
+              top: `${12 + ((index * 27) % 78)}%`,
+            }}
+            animate={{
+              opacity: [0.15, 0.55, 0.15],
+              y: [0, -10, 0],
+              scale: [0.8, 1.3, 0.8],
+            }}
+            transition={{
+              duration: 3 + (index % 3),
+              repeat: Infinity,
+              delay: index * 0.15,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+      {/* ======================================================
+          CONTENT
+      ====================================================== */}
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
         {/* Heading */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-9 max-w-3xl"
+          className="mx-auto mb-10 max-w-2xl text-center"
         >
-          <div className="mb-3 flex items-center gap-3">
-            <div className="h-px w-8 bg-cyan-400" />
+          <div className="mb-3 flex items-center justify-center gap-3">
+            <div className="h-px w-7 bg-cyan-400/70" />
 
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-300">
               Technical Expertise
             </span>
+
+            <div className="h-px w-7 bg-cyan-400/70" />
           </div>
 
-          <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Skills &{" "}
             <span className="text-cyan-300">
               Technologies
             </span>
           </h2>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
+          <p className="mx-auto mt-3 max-w-xl text-xs leading-6 text-slate-500 sm:text-sm">
             A structured overview of my technical skills, tools and
             technologies across software engineering, AI, data and gaming.
           </p>
         </motion.div>
 
-        {/* Horizontal Carousel */}
-        <div className="relative">
-          <div
+        {/* ====================================================
+            CAROUSEL
+        ==================================================== */}
+
+        <div
+          className="relative mx-auto max-w-[1150px]"
+          style={{
+            perspective: "1400px",
+          }}
+        >
+
+          {/* LEFT ARROW */}
+          <button
+            type="button"
+            onClick={goPrevious}
+            aria-label="Previous category"
             className="
-              flex
-              gap-5
-              overflow-x-auto
-              pb-6
-              snap-x
-              snap-mandatory
-              scroll-smooth
-              [scrollbar-width:none]
-              [-ms-overflow-style:none]
-              [&::-webkit-scrollbar]:hidden
+              absolute left-1 top-1/2 z-50
+              flex h-11 w-11 -translate-y-1/2
+              items-center justify-center
+              rounded-full
+              border border-cyan-400/25
+              bg-[#06101d]/95
+              text-cyan-300
+              shadow-[0_0_25px_rgba(34,211,238,0.12)]
+              backdrop-blur-xl
+              transition-all duration-300
+              hover:scale-110
+              hover:border-cyan-400/50
+              hover:bg-cyan-400/10
+              sm:left-3
+              lg:left-5
             "
           >
-            {categories.map((category, index) => (
-              <div
-                key={category.name}
-                className="
-                  w-[82vw]
-                  min-w-[82vw]
-                  snap-center
-                  sm:w-[500px]
-                  sm:min-w-[500px]
-                  lg:w-[560px]
-                  lg:min-w-[560px]
-                "
+            <ChevronLeft size={21} />
+          </button>
+
+          {/* RIGHT ARROW */}
+          <button
+            type="button"
+            onClick={goNext}
+            aria-label="Next category"
+            className="
+              absolute right-1 top-1/2 z-50
+              flex h-11 w-11 -translate-y-1/2
+              items-center justify-center
+              rounded-full
+              border border-cyan-400/25
+              bg-[#06101d]/95
+              text-cyan-300
+              shadow-[0_0_25px_rgba(34,211,238,0.12)]
+              backdrop-blur-xl
+              transition-all duration-300
+              hover:scale-110
+              hover:border-cyan-400/50
+              hover:bg-cyan-400/10
+              sm:right-3
+              lg:right-5
+            "
+          >
+            <ChevronRight size={21} />
+          </button>
+
+          {/* ==================================================
+              MOBILE ARROWS
+          ================================================== */}
+
+          <div className="mb-4 flex items-center justify-center gap-4 sm:hidden">
+            <button
+              type="button"
+              onClick={goPrevious}
+              aria-label="Previous category"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/20 bg-white/[0.03] text-cyan-300"
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <span className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
+              {activeIndex + 1} / {total}
+            </span>
+
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next category"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/20 bg-white/[0.03] text-cyan-300"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+
+          {/* ==================================================
+              COVERFLOW STAGE
+          ================================================== */}
+
+          <div
+            className="
+              relative
+              h-[530px]
+              overflow-hidden
+              sm:h-[520px]
+              lg:h-[510px]
+            "
+            style={{
+              transformStyle: "preserve-3d",
+            }}
+          >
+
+            {/* Previous */}
+            <motion.div
+              key={`previous-${previousIndex}`}
+              initial={{
+                opacity: 0,
+                x: direction > 0 ? -80 : -30,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 180,
+                damping: 24,
+              }}
+              className="
+                absolute left-1/2 top-1/2
+                hidden h-[430px] w-[430px]
+                -translate-x-1/2 -translate-y-1/2
+                sm:block
+                lg:h-[440px] lg:w-[440px]
+              "
+              style={{
+                marginLeft: "-315px",
+                transformStyle: "preserve-3d",
+                zIndex: 10,
+              }}
+            >
+              <motion.div
+                animate={{
+                  rotateY: 18,
+                  scale: 0.82,
+                  opacity: 0.38,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 190,
+                  damping: 24,
+                }}
+                className="h-full w-full"
+                style={{
+                  transformStyle: "preserve-3d",
+                }}
               >
                 <CategoryCard
-                  category={category}
-                  index={index}
+                  category={categories[previousIndex]}
+                  active={false}
                 />
-              </div>
+              </motion.div>
+            </motion.div>
+
+            {/* ACTIVE */}
+            <AnimatePresence mode="wait" custom={direction}>
+              <motion.div
+                key={activeIndex}
+                custom={direction}
+                initial={{
+                  opacity: 0,
+                  scale: 0.88,
+                  x: direction > 0 ? 70 : -70,
+                  rotateY: direction > 0 ? -10 : 10,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  x: 0,
+                  rotateY: 0,
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.9,
+                  x: direction > 0 ? -70 : 70,
+                  rotateY: direction > 0 ? 10 : -10,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 180,
+                  damping: 23,
+                  mass: 0.8,
+                }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.18}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -60) {
+                    goNext();
+                  } else if (info.offset.x > 60) {
+                    goPrevious();
+                  }
+                }}
+                className="
+                  absolute left-1/2 top-1/2
+                  z-30
+                  h-[500px] w-[calc(100%-70px)]
+                  max-w-[560px]
+                  -translate-x-1/2 -translate-y-1/2
+                  cursor-grab
+                  active:cursor-grabbing
+                  sm:h-[490px]
+                  sm:w-[520px]
+                  lg:h-[480px]
+                  lg:w-[540px]
+                "
+                style={{
+                  transformStyle: "preserve-3d",
+                }}
+              >
+                <CategoryCard
+                  category={categories[activeIndex]}
+                  active
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Next */}
+            <motion.div
+              key={`next-${nextIndex}`}
+              initial={{
+                opacity: 0,
+                x: direction < 0 ? 80 : 30,
+              }}
+              animate={{
+                opacity: 1,
+                x: 0,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 180,
+                damping: 24,
+              }}
+              className="
+                absolute left-1/2 top-1/2
+                hidden h-[430px] w-[430px]
+                -translate-x-1/2 -translate-y-1/2
+                sm:block
+                lg:h-[440px] lg:w-[440px]
+              "
+              style={{
+                marginLeft: "315px",
+                transformStyle: "preserve-3d",
+                zIndex: 10,
+              }}
+            >
+              <motion.div
+                animate={{
+                  rotateY: -18,
+                  scale: 0.82,
+                  opacity: 0.38,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 190,
+                  damping: 24,
+                }}
+                className="h-full w-full"
+                style={{
+                  transformStyle: "preserve-3d",
+                }}
+              >
+                <CategoryCard
+                  category={categories[nextIndex]}
+                  active={false}
+                />
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* ==================================================
+              DOTS
+          ================================================== */}
+
+          <div className="mt-3 flex items-center justify-center gap-2">
+            {categories.map((category, index) => (
+              <button
+                key={category.name}
+                type="button"
+                onClick={() => goTo(index)}
+                aria-label={`Go to ${category.name}`}
+                className="p-1"
+              >
+                <motion.span
+                  animate={{
+                    width: index === activeIndex ? 26 : 6,
+                    opacity: index === activeIndex ? 1 : 0.35,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 25,
+                  }}
+                  className="block h-1.5 rounded-full bg-cyan-400"
+                />
+              </button>
             ))}
           </div>
 
-          {/* Left fade */}
-          <div
-            className="
-              pointer-events-none
-              absolute
-              left-0
-              top-0
-              h-full
-              w-10
-              bg-gradient-to-r
-              from-[#020617]
-              to-transparent
-            "
-          />
-
-          {/* Right fade */}
-          <div
-            className="
-              pointer-events-none
-              absolute
-              right-0
-              top-0
-              h-full
-              w-10
-              bg-gradient-to-l
-              from-[#020617]
-              to-transparent
-            "
-          />
+          <p className="mt-4 text-center text-[9px] uppercase tracking-[0.2em] text-slate-600">
+            Drag or use the arrows
+          </p>
         </div>
-
-        {/* Scroll hint */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-          className="mt-3 flex items-center justify-center gap-2 text-[11px] text-slate-500"
-        >
-          <span>Scroll horizontally</span>
-          <span className="text-cyan-400">→</span>
-        </motion.div>
       </div>
     </section>
   );
 }
+
