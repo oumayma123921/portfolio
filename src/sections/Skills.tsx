@@ -236,13 +236,21 @@ const categories: Category[] = [
       { name: "Matplotlib", image: "/skills/matplotlib.png" },
       { name: "Seaborn", image: "/skills/seaborn.png" },
       { name: "SQL", image: "/skills/sql.png" },
-      { name: "Jupyter Notebook", icon: <SiJupyter />, color: "#F37626" },
+      {
+        name: "Jupyter Notebook",
+        icon: <SiJupyter />,
+        color: "#F37626",
+      },
       {
         name: "Google Colab",
         icon: <SiGooglecolab />,
         color: "#F9AB00",
       },
-      { name: "Hadoop", icon: <SiApachehadoop />, color: "#66CCFF" },
+      {
+        name: "Hadoop",
+        icon: <SiApachehadoop />,
+        color: "#66CCFF",
+      },
       { name: "HDFS", image: "/skills/hdfs.png" },
       {
         name: "Apache Spark",
@@ -257,7 +265,11 @@ const categories: Category[] = [
       { name: "MySQL", icon: <SiMysql />, color: "#4479A1" },
       { name: "Oracle", image: "/skills/oracle.png" },
       { name: "SQL Server", image: "/skills/sql-server.png" },
-      { name: "MongoDB", icon: <SiMongodb />, color: "#47A248" },
+      {
+        name: "MongoDB",
+        icon: <SiMongodb />,
+        color: "#47A248",
+      },
     ],
   },
 
@@ -282,7 +294,11 @@ const categories: Category[] = [
         color: "#FFFFFF",
       },
       { name: "Unity", image: "/skills/unity.png" },
-      { name: "Blender", icon: <SiBlender />, color: "#F5792A" },
+      {
+        name: "Blender",
+        icon: <SiBlender />,
+        color: "#F5792A",
+      },
       { name: "Sketchfab", image: "/skills/sketchfab.png" },
     ],
   },
@@ -292,7 +308,9 @@ const categories: Category[] = [
    TOOL LOGO
 ============================================================ */
 
-function ToolLogo({ tool }: Readonly<{ tool: Tool }>) {
+function ToolLogo({
+  tool,
+}: Readonly<{ tool: Tool }>) {
   if (tool.image) {
     return (
       <img
@@ -318,7 +336,7 @@ function ToolLogo({ tool }: Readonly<{ tool: Tool }>) {
 }
 
 /* ============================================================
-   CARD
+   CATEGORY CARD
 ============================================================ */
 
 function CategoryCard({
@@ -353,18 +371,20 @@ function CategoryCard({
       {active && (
         <>
           <div className="pointer-events-none absolute -right-24 -top-24 h-52 w-52 rounded-full bg-cyan-400/10 blur-3xl" />
+
           <div className="pointer-events-none absolute -bottom-24 -left-24 h-52 w-52 rounded-full bg-blue-600/10 blur-3xl" />
         </>
       )}
 
-      <div className="relative flex h-full flex-col p-5 sm:p-6">
+      <div className="relative flex h-full flex-col p-4 sm:p-6">
 
         {/* Header */}
-        <div className="flex items-start gap-3.5">
+        <div className="flex items-start gap-3 sm:gap-3.5">
           <div
             className={`
-              flex h-10 w-10 shrink-0 items-center justify-center
+              flex h-9 w-9 shrink-0 items-center justify-center
               rounded-xl border
+              sm:h-10 sm:w-10
               ${
                 active
                   ? "border-cyan-400/25 bg-cyan-400/10 text-cyan-300"
@@ -377,7 +397,7 @@ function CategoryCard({
 
           <div className="min-w-0">
             <h3
-              className={`text-lg font-bold tracking-tight sm:text-xl ${
+              className={`text-base font-bold tracking-tight sm:text-xl ${
                 active ? "text-white" : "text-slate-400"
               }`}
             >
@@ -385,7 +405,7 @@ function CategoryCard({
             </h3>
 
             <p
-              className={`mt-1 text-[11px] leading-4 sm:text-xs sm:leading-5 ${
+              className={`mt-1 text-[10px] leading-4 sm:text-xs sm:leading-5 ${
                 active ? "text-slate-400" : "text-slate-600"
               }`}
             >
@@ -396,7 +416,7 @@ function CategoryCard({
 
         {/* Divider */}
         <div
-          className={`my-5 h-px ${
+          className={`my-4 h-px sm:my-5 ${
             active
               ? "bg-gradient-to-r from-cyan-400/30 via-white/[0.08] to-transparent"
               : "bg-white/[0.04]"
@@ -404,15 +424,17 @@ function CategoryCard({
         />
 
         {/* Skills */}
-        <div className="flex-1">
-          <div className="mb-3 flex items-center gap-2">
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <div className="mb-2.5 flex items-center gap-2 sm:mb-3">
             <Layers3
               size={14}
-              className={active ? "text-cyan-300" : "text-slate-600"}
+              className={
+                active ? "text-cyan-300" : "text-slate-600"
+              }
             />
 
             <h4
-              className={`text-[10px] font-semibold uppercase tracking-[0.18em] ${
+              className={`text-[9px] font-semibold uppercase tracking-[0.18em] sm:text-[10px] ${
                 active ? "text-slate-300" : "text-slate-600"
               }`}
             >
@@ -420,12 +442,14 @@ function CategoryCard({
             </h4>
           </div>
 
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex max-h-[150px] flex-wrap gap-1.5 overflow-hidden sm:max-h-[160px]">
             {category.skills.map((skill) => (
               <span
                 key={skill}
                 className={`
-                  rounded-full border px-2.5 py-1 text-[10px] font-medium
+                  rounded-full border px-2 py-1
+                  text-[9px] font-medium
+                  sm:px-2.5 sm:text-[10px]
                   ${
                     active
                       ? "border-white/[0.09] bg-white/[0.045] text-slate-300 hover:border-cyan-400/30 hover:text-cyan-200"
@@ -440,15 +464,17 @@ function CategoryCard({
         </div>
 
         {/* Tools */}
-        <div className="mt-5">
-          <div className="mb-3 flex items-center gap-2">
+        <div className="mt-4 sm:mt-5">
+          <div className="mb-2.5 flex items-center gap-2 sm:mb-3">
             <Cpu
               size={14}
-              className={active ? "text-cyan-300" : "text-slate-600"}
+              className={
+                active ? "text-cyan-300" : "text-slate-600"
+              }
             />
 
             <h4
-              className={`text-[10px] font-semibold uppercase tracking-[0.18em] ${
+              className={`text-[9px] font-semibold uppercase tracking-[0.18em] sm:text-[10px] ${
                 active ? "text-slate-300" : "text-slate-600"
               }`}
             >
@@ -462,7 +488,9 @@ function CategoryCard({
                 key={tool.name}
                 title={tool.name}
                 className={`
-                  flex h-8 w-8 items-center justify-center rounded-lg border
+                  flex h-7 w-7 items-center justify-center
+                  rounded-lg border
+                  sm:h-8 sm:w-8
                   ${
                     active
                       ? "border-white/[0.08] bg-black/25 hover:scale-110 hover:border-cyan-400/40 hover:bg-white/[0.07]"
@@ -496,40 +524,72 @@ export default function Skills() {
 
   const goPrevious = () => {
     setDirection(-1);
-    setActiveIndex((current) => (current - 1 + total) % total);
+
+    setActiveIndex(
+      (current) => (current - 1 + total) % total
+    );
   };
 
   const goNext = () => {
     setDirection(1);
-    setActiveIndex((current) => (current + 1) % total);
+
+    setActiveIndex(
+      (current) => (current + 1) % total
+    );
   };
 
   const goTo = (index: number) => {
-    setDirection(index > activeIndex ? 1 : -1);
+    if (index === activeIndex) return;
+
+    setDirection(
+      index > activeIndex ? 1 : -1
+    );
+
     setActiveIndex(index);
   };
 
-  /* Keyboard navigation */
+  /* ==========================================================
+     KEYBOARD NAVIGATION
+  ========================================================== */
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") goPrevious();
-      if (event.key === "ArrowRight") goNext();
+      if (event.key === "ArrowLeft") {
+        goPrevious();
+      }
+
+      if (event.key === "ArrowRight") {
+        goNext();
+      }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener(
+      "keydown",
+      handleKeyDown
+    );
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown
+      );
     };
   });
 
-  const previousIndex = (activeIndex - 1 + total) % total;
-  const nextIndex = (activeIndex + 1) % total;
+  const previousIndex =
+    (activeIndex - 1 + total) % total;
+
+  const nextIndex =
+    (activeIndex + 1) % total;
 
   return (
     <section
       id="skills"
-      className="relative overflow-hidden bg-[#020617] py-20 sm:py-24"
+      className="
+        relative overflow-hidden
+        bg-[#020617]
+        py-20 sm:py-24
+      "
     >
       {/* ======================================================
           BACKGROUND
@@ -537,16 +597,46 @@ export default function Skills() {
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
 
-        <div className="absolute left-1/2 top-1/2 h-[550px] w-[550px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/[0.035] blur-[120px]" />
+        {/* Main glow */}
+        <div
+          className="
+            absolute left-1/2 top-1/2
+            h-[550px] w-[550px]
+            -translate-x-1/2
+            -translate-y-1/2
+            rounded-full
+            bg-cyan-500/[0.035]
+            blur-[120px]
+          "
+        />
 
-        <div className="absolute -left-40 top-1/4 h-72 w-72 rounded-full bg-blue-600/[0.045] blur-[110px]" />
+        {/* Left glow */}
+        <div
+          className="
+            absolute -left-40 top-1/4
+            h-72 w-72
+            rounded-full
+            bg-blue-600/[0.045]
+            blur-[110px]
+          "
+        />
 
-        <div className="absolute -right-40 bottom-1/4 h-72 w-72 rounded-full bg-purple-600/[0.035] blur-[110px]" />
+        {/* Right glow */}
+        <div
+          className="
+            absolute -right-40 bottom-1/4
+            h-72 w-72
+            rounded-full
+            bg-purple-600/[0.035]
+            blur-[110px]
+          "
+        />
 
         {/* Grid */}
         <div
           className="
-            absolute inset-0 opacity-[0.13]
+            absolute inset-0
+            opacity-[0.13]
             [background-image:linear-gradient(rgba(56,189,248,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(56,189,248,0.08)_1px,transparent_1px)]
             [background-size:75px_75px]
             [mask-image:radial-gradient(ellipse_at_center,black_10%,transparent_75%)]
@@ -555,7 +645,11 @@ export default function Skills() {
 
         {/* Network lines */}
         <svg
-          className="absolute inset-0 h-full w-full opacity-[0.1]"
+          className="
+            absolute inset-0
+            h-full w-full
+            opacity-[0.1]
+          "
           preserveAspectRatio="none"
         >
           <line
@@ -635,7 +729,12 @@ export default function Skills() {
         {[...Array(14)].map((_, index) => (
           <motion.span
             key={index}
-            className="absolute h-1 w-1 rounded-full bg-cyan-300/40"
+            className="
+              absolute
+              h-1 w-1
+              rounded-full
+              bg-cyan-300/40
+            "
             style={{
               left: `${5 + ((index * 19) % 90)}%`,
               top: `${12 + ((index * 27) % 78)}%`,
@@ -659,34 +758,80 @@ export default function Skills() {
           CONTENT
       ====================================================== */}
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div
+        className="
+          relative z-10
+          mx-auto max-w-7xl
+          px-4 sm:px-6 lg:px-8
+        "
+      >
 
         {/* Heading */}
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mx-auto mb-10 max-w-2xl text-center"
+          initial={{
+            opacity: 0,
+            y: 15,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+          }}
+          transition={{
+            duration: 0.5,
+          }}
+          className="
+            mx-auto mb-8
+            max-w-2xl
+            text-center
+            sm:mb-10
+          "
         >
           <div className="mb-3 flex items-center justify-center gap-3">
             <div className="h-px w-7 bg-cyan-400/70" />
 
-            <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-cyan-300">
+            <span
+              className="
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.24em]
+                text-cyan-300
+              "
+            >
               Technical Expertise
             </span>
 
             <div className="h-px w-7 bg-cyan-400/70" />
           </div>
 
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Skills &{" "}
+          <h2
+            className="
+              text-3xl
+              font-bold
+              tracking-tight
+              text-white
+              sm:text-4xl
+            "
+          >
+            Skills{" "}
             <span className="text-cyan-300">
-              Technologies
+              & Technologies
             </span>
           </h2>
 
-          <p className="mx-auto mt-3 max-w-xl text-xs leading-6 text-slate-500 sm:text-sm">
+          <p
+            className="
+              mx-auto mt-3
+              max-w-xl
+              text-xs
+              leading-6
+              text-slate-500
+              sm:text-sm
+            "
+          >
             A structured overview of my technical skills, tools and
             technologies across software engineering, AI, data and gaming.
           </p>
@@ -697,79 +842,62 @@ export default function Skills() {
         ==================================================== */}
 
         <div
-          className="relative mx-auto max-w-[1150px]"
+          className="
+            relative
+            mx-auto
+            w-full
+            max-w-[1150px]
+          "
           style={{
             perspective: "1400px",
           }}
         >
 
-          {/* LEFT ARROW */}
-          <button
-            type="button"
-            onClick={goPrevious}
-            aria-label="Previous category"
-            className="
-              absolute left-1 top-1/2 z-50
-              flex h-11 w-11 -translate-y-1/2
-              items-center justify-center
-              rounded-full
-              border border-cyan-400/25
-              bg-[#06101d]/95
-              text-cyan-300
-              shadow-[0_0_25px_rgba(34,211,238,0.12)]
-              backdrop-blur-xl
-              transition-all duration-300
-              hover:scale-110
-              hover:border-cyan-400/50
-              hover:bg-cyan-400/10
-              sm:left-3
-              lg:left-5
-            "
-          >
-            <ChevronLeft size={21} />
-          </button>
-
-          {/* RIGHT ARROW */}
-          <button
-            type="button"
-            onClick={goNext}
-            aria-label="Next category"
-            className="
-              absolute right-1 top-1/2 z-50
-              flex h-11 w-11 -translate-y-1/2
-              items-center justify-center
-              rounded-full
-              border border-cyan-400/25
-              bg-[#06101d]/95
-              text-cyan-300
-              shadow-[0_0_25px_rgba(34,211,238,0.12)]
-              backdrop-blur-xl
-              transition-all duration-300
-              hover:scale-110
-              hover:border-cyan-400/50
-              hover:bg-cyan-400/10
-              sm:right-3
-              lg:right-5
-            "
-          >
-            <ChevronRight size={21} />
-          </button>
-
           {/* ==================================================
-              MOBILE ARROWS
+              MOBILE NAVIGATION
           ================================================== */}
 
-          <div className="mb-4 flex items-center justify-center gap-4 sm:hidden">
+          <div
+            className="
+              mb-4
+              flex
+              items-center
+              justify-center
+              gap-4
+              sm:hidden
+            "
+          >
             <button
               type="button"
               onClick={goPrevious}
               aria-label="Previous category"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/20 bg-white/[0.03] text-cyan-300"
+              className="
+                flex h-9 w-9
+                items-center justify-center
+                rounded-full
+                border border-cyan-400/25
+                bg-[#06101d]/95
+                text-cyan-300
+                shadow-[0_0_20px_rgba(34,211,238,0.10)]
+                backdrop-blur-xl
+                transition-all
+                active:scale-95
+              "
             >
               <ChevronLeft size={18} />
             </button>
 
-            <span className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
+            <span
+              className="
+                min-w-[55px]
+                text-center
+                text-[10px]
+                font-medium
+                uppercase
+                tracking-[0.2em]
+                text-slate-500
+              "
+            >
               {activeIndex + 1} / {total}
             </span>
 
@@ -777,21 +905,33 @@ export default function Skills() {
               type="button"
               onClick={goNext}
               aria-label="Next category"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/20 bg-white/[0.03] text-cyan-300"
+              className="
+                flex h-9 w-9
+                items-center justify-center
+                rounded-full
+                border border-cyan-400/25
+                bg-[#06101d]/95
+                text-cyan-300
+                shadow-[0_0_20px_rgba(34,211,238,0.10)]
+                backdrop-blur-xl
+                transition-all
+                active:scale-95
+              "
             >
               <ChevronRight size={18} />
             </button>
           </div>
 
           {/* ==================================================
-              COVERFLOW STAGE
+              CAROUSEL STAGE
           ================================================== */}
 
           <div
             className="
               relative
-              h-[530px]
-              overflow-hidden
+              h-[535px]
+              w-full
+              overflow-visible
               sm:h-[520px]
               lg:h-[510px]
             "
@@ -800,12 +940,89 @@ export default function Skills() {
             }}
           >
 
-            {/* Previous */}
+            {/* =================================================
+                DESKTOP LEFT ARROW
+            ================================================= */}
+
+            <button
+              type="button"
+              onClick={goPrevious}
+              aria-label="Previous category"
+              className="
+                absolute
+                left-1
+                top-1/2
+                z-50
+                hidden
+                h-11 w-11
+                -translate-y-1/2
+                items-center
+                justify-center
+                rounded-full
+                border border-cyan-400/25
+                bg-[#06101d]/95
+                text-cyan-300
+                shadow-[0_0_25px_rgba(34,211,238,0.12)]
+                backdrop-blur-xl
+                transition-all
+                duration-300
+                hover:scale-110
+                hover:border-cyan-400/50
+                hover:bg-cyan-400/10
+                sm:flex
+                sm:left-3
+                lg:left-5
+              "
+            >
+              <ChevronLeft size={21} />
+            </button>
+
+            {/* =================================================
+                DESKTOP RIGHT ARROW
+            ================================================= */}
+
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next category"
+              className="
+                absolute
+                right-1
+                top-1/2
+                z-50
+                hidden
+                h-11 w-11
+                -translate-y-1/2
+                items-center
+                justify-center
+                rounded-full
+                border border-cyan-400/25
+                bg-[#06101d]/95
+                text-cyan-300
+                shadow-[0_0_25px_rgba(34,211,238,0.12)]
+                backdrop-blur-xl
+                transition-all
+                duration-300
+                hover:scale-110
+                hover:border-cyan-400/50
+                hover:bg-cyan-400/10
+                sm:flex
+                sm:right-3
+                lg:right-5
+              "
+            >
+              <ChevronRight size={21} />
+            </button>
+
+            {/* =================================================
+                PREVIOUS CARD
+            ================================================= */}
+
             <motion.div
               key={`previous-${previousIndex}`}
               initial={{
                 opacity: 0,
-                x: direction > 0 ? -80 : -30,
+                x: direction > 0 ? -60 : -20,
               }}
               animate={{
                 opacity: 1,
@@ -817,11 +1034,17 @@ export default function Skills() {
                 damping: 24,
               }}
               className="
-                absolute left-1/2 top-1/2
-                hidden h-[430px] w-[430px]
-                -translate-x-1/2 -translate-y-1/2
+                absolute
+                left-1/2
+                top-1/2
+                hidden
+                h-[430px]
+                w-[430px]
+                -translate-x-1/2
+                -translate-y-1/2
                 sm:block
-                lg:h-[440px] lg:w-[440px]
+                lg:h-[440px]
+                lg:w-[440px]
               "
               style={{
                 marginLeft: "-315px",
@@ -846,22 +1069,36 @@ export default function Skills() {
                 }}
               >
                 <CategoryCard
-                  category={categories[previousIndex]}
+                  category={
+                    categories[previousIndex]
+                  }
                   active={false}
                 />
               </motion.div>
             </motion.div>
 
-            {/* ACTIVE */}
-            <AnimatePresence mode="wait" custom={direction}>
+            {/* =================================================
+                ACTIVE CARD
+            ================================================= */}
+
+            <AnimatePresence
+              mode="wait"
+              custom={direction}
+            >
               <motion.div
                 key={activeIndex}
                 custom={direction}
                 initial={{
                   opacity: 0,
-                  scale: 0.88,
-                  x: direction > 0 ? 70 : -70,
-                  rotateY: direction > 0 ? -10 : 10,
+                  scale: 0.94,
+                  x:
+                    direction > 0
+                      ? 45
+                      : -45,
+                  rotateY:
+                    direction > 0
+                      ? -6
+                      : 6,
                 }}
                 animate={{
                   opacity: 1,
@@ -871,9 +1108,15 @@ export default function Skills() {
                 }}
                 exit={{
                   opacity: 0,
-                  scale: 0.9,
-                  x: direction > 0 ? -70 : 70,
-                  rotateY: direction > 0 ? 10 : -10,
+                  scale: 0.94,
+                  x:
+                    direction > 0
+                      ? -45
+                      : 45,
+                  rotateY:
+                    direction > 0
+                      ? 6
+                      : -6,
                 }}
                 transition={{
                   type: "spring",
@@ -882,25 +1125,36 @@ export default function Skills() {
                   mass: 0.8,
                 }}
                 drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
+                dragConstraints={{
+                  left: 0,
+                  right: 0,
+                }}
                 dragElastic={0.18}
                 onDragEnd={(_, info) => {
                   if (info.offset.x < -60) {
                     goNext();
-                  } else if (info.offset.x > 60) {
+                  } else if (
+                    info.offset.x > 60
+                  ) {
                     goPrevious();
                   }
                 }}
                 className="
-                  absolute left-1/2 top-1/2
+                  absolute
+                  left-1/2
+                  top-1/2
                   z-30
-                  h-[500px] w-[calc(100%-70px)]
+                  h-[500px]
+                  w-[calc(100%-32px)]
                   max-w-[560px]
-                  -translate-x-1/2 -translate-y-1/2
+                  -translate-x-1/2
+                  -translate-y-1/2
                   cursor-grab
                   active:cursor-grabbing
+
                   sm:h-[490px]
                   sm:w-[520px]
+
                   lg:h-[480px]
                   lg:w-[540px]
                 "
@@ -909,18 +1163,23 @@ export default function Skills() {
                 }}
               >
                 <CategoryCard
-                  category={categories[activeIndex]}
+                  category={
+                    categories[activeIndex]
+                  }
                   active
                 />
               </motion.div>
             </AnimatePresence>
 
-            {/* Next */}
+            {/* =================================================
+                NEXT CARD
+            ================================================= */}
+
             <motion.div
               key={`next-${nextIndex}`}
               initial={{
                 opacity: 0,
-                x: direction < 0 ? 80 : 30,
+                x: direction < 0 ? 60 : 20,
               }}
               animate={{
                 opacity: 1,
@@ -932,11 +1191,17 @@ export default function Skills() {
                 damping: 24,
               }}
               className="
-                absolute left-1/2 top-1/2
-                hidden h-[430px] w-[430px]
-                -translate-x-1/2 -translate-y-1/2
+                absolute
+                left-1/2
+                top-1/2
+                hidden
+                h-[430px]
+                w-[430px]
+                -translate-x-1/2
+                -translate-y-1/2
                 sm:block
-                lg:h-[440px] lg:w-[440px]
+                lg:h-[440px]
+                lg:w-[440px]
               "
               style={{
                 marginLeft: "315px",
@@ -961,7 +1226,9 @@ export default function Skills() {
                 }}
               >
                 <CategoryCard
-                  category={categories[nextIndex]}
+                  category={
+                    categories[nextIndex]
+                  }
                   active={false}
                 />
               </motion.div>
@@ -972,32 +1239,65 @@ export default function Skills() {
               DOTS
           ================================================== */}
 
-          <div className="mt-3 flex items-center justify-center gap-2">
-            {categories.map((category, index) => (
-              <button
-                key={category.name}
-                type="button"
-                onClick={() => goTo(index)}
-                aria-label={`Go to ${category.name}`}
-                className="p-1"
-              >
-                <motion.span
-                  animate={{
-                    width: index === activeIndex ? 26 : 6,
-                    opacity: index === activeIndex ? 1 : 0.35,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 25,
-                  }}
-                  className="block h-1.5 rounded-full bg-cyan-400"
-                />
-              </button>
-            ))}
+          <div
+            className="
+              mt-3
+              flex
+              items-center
+              justify-center
+              gap-1
+            "
+          >
+            {categories.map(
+              (category, index) => (
+                <button
+                  key={category.name}
+                  type="button"
+                  onClick={() =>
+                    goTo(index)
+                  }
+                  aria-label={`Go to ${category.name}`}
+                  className="p-1"
+                >
+                  <motion.span
+                    animate={{
+                      width:
+                        index === activeIndex
+                          ? 26
+                          : 6,
+                      opacity:
+                        index === activeIndex
+                          ? 1
+                          : 0.35,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 25,
+                    }}
+                    className="
+                      block
+                      h-1.5
+                      rounded-full
+                      bg-cyan-400
+                    "
+                  />
+                </button>
+              )
+            )}
           </div>
 
-          <p className="mt-4 text-center text-[9px] uppercase tracking-[0.2em] text-slate-600">
+          {/* Hint */}
+          <p
+            className="
+              mt-4
+              text-center
+              text-[9px]
+              uppercase
+              tracking-[0.2em]
+              text-slate-600
+            "
+          >
             Drag or use the arrows
           </p>
         </div>
