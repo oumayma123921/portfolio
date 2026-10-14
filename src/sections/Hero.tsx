@@ -7,13 +7,13 @@ export default function Hero() {
      TYPEWRITER ROLES
   ============================================================ */
 
-  const roles = [
-    "Data Analyst",
-    "AI & Machine Learning Engineer",
-    "Software Engineer",
-    "Business Intelligence Analyst",
-    "Game Data Analyst",
-  ];
+ const roles = [
+  "Software Developer",
+  "Data Analyst",
+  "Data Scientist",
+  "Business Intelligence Analyst",
+  "Game Developer",
+];
 
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayedRole, setDisplayedRole] = useState("");
@@ -70,8 +70,7 @@ export default function Hero() {
               <span className="h-2 w-2 shrink-0 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
 
               <span className="text-[10px] font-medium leading-5 tracking-wide text-cyan-300 sm:text-xs">
-                Software Engineering • Business Intelligence • Data Analytics
-                • AI • Gaming
+                Software Development • Business Intelligence • Data Analytics • Artificial Intelligence • Game Development
               </span>
             </div>
 
@@ -101,20 +100,20 @@ export default function Hero() {
             <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-400 sm:mt-7 sm:text-lg sm:leading-8">
               Master&apos;s student specializing in{" "}
               <span className="text-slate-200">
-                Engineering &amp; Analytics of Data applied to the Gaming
+                Software Development &amp; Data Analytics applied to the Gaming
                 Industry
               </span>
               , with a strong interest in{" "}
               <span className="text-slate-200">
                 Data Analytics, Business Intelligence, Artificial Intelligence
-                and Software Engineering.
+                and Software Development.
               </span>
             </p>
 
             {/* Secondary description */}
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
               I build data-driven and intelligent digital solutions by
-              combining analytical thinking, software engineering and
+              combining analytical thinking, software development and
               interactive technologies within the gaming ecosystem.
             </p>
 
@@ -169,7 +168,7 @@ export default function Hero() {
                 </p>
 
                 <p className="mt-1 text-[11px] text-slate-600 sm:text-xs">
-                  Intelligent Systems
+                  Artificial Intelligence
                 </p>
               </div>
 
@@ -179,7 +178,7 @@ export default function Hero() {
                 </p>
 
                 <p className="mt-1 text-[11px] text-slate-600 sm:text-xs">
-                  Engineering &amp; Development
+                  Software Development
                 </p>
               </div>
 
@@ -189,7 +188,7 @@ export default function Hero() {
                 </p>
 
                 <p className="mt-1 text-[11px] text-slate-600 sm:text-xs">
-                  Interactive Technologies
+                  Game Development
                 </p>
               </div>
 
@@ -219,7 +218,7 @@ export default function Hero() {
               <div className="relative h-full w-full overflow-hidden rounded-full border border-cyan-400/20 bg-[#050816] shadow-[0_0_60px_rgba(34,211,238,0.12)]">
 
                 <img
-                  src="/images/profile.png"
+                  src="/images/profile.jpeg"
                   alt="Oumaima Ibnayyad"
                   className="h-full w-full object-cover object-center"
                 />

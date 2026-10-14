@@ -45,14 +45,14 @@ const education = [
     institution:
       "École Normale Supérieure de Fès — Université Sidi Mohamed Ben Abdellah",
     detail:
-      "Data Analytics • Business Intelligence • Artificial Intelligence • Software Engineering • Gaming",
+      "Data Analytics • Artificial Intelligence • Gaming",
   },
   {
     period: "2024 — 2025",
     degree: "Professional Bachelor's — Business Intelligence",
     institution: "École Supérieure de Technologie de Fès",
     detail:
-      "Business Intelligence • Data Analytics • Decision Support Systems",
+      "Data Analytics • Data Science • Business Intelligence • Artificial Intelligence",
   },
   {
     period: "2022 — 2024",
@@ -72,10 +72,11 @@ const education = [
 
 const specialization = [
   "Data Analytics",
+  "Data Science",
   "Business Intelligence",
   "Artificial Intelligence",
-  "Software Engineering",
-  "Gaming",
+  "Software Development",
+  "Game Development",
 ];
 
 const slideAnimation = {
@@ -238,8 +239,8 @@ export default function About() {
                 sm:text-sm
               "
             >
-              My academic and practical journey combines data analytics, Business
-              Intelligence, artificial intelligence and software engineering, with a
+              My academic and practical journey combines data analytics, data science, Business
+              Intelligence, artificial intelligence and software Development, with a
               specialization applied to the gaming industry.
             </p>
           </motion.div>
@@ -273,8 +274,8 @@ export default function About() {
                   </h3>
 
                   <p className="mt-1 text-xs font-medium leading-5 text-cyan-300">
-                    Data Analytics • Business Intelligence • AI • Software
-                    Engineering • Gaming
+                    Data Analytics • Data Science • Business Intelligence • Artificial Intelligence • Software
+                    Development • Game Development
                   </p>
                 </div>
 
@@ -290,7 +291,7 @@ export default function About() {
               <p className="mt-3 text-sm leading-7 text-slate-400">
                 My interests focus on Data Analytics, Business Intelligence,
                 Artificial Intelligence, Machine Learning, software
-                engineering and intelligent digital solutions.
+                development and intelligent digital solutions.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-2.5">
@@ -336,8 +337,8 @@ export default function About() {
               </h3>
 
               <p className="mt-4 text-xs leading-6 text-slate-500">
-                Combining data analytics, Business Intelligence, AI and
-                software engineering with gaming technologies.
+                Combining data analytics, data science, Business Intelligence, AI and
+                software development with gaming technologies.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-2">

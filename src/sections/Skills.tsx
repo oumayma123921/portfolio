@@ -65,9 +65,9 @@ type Category = {
 
 const categories: Category[] = [
   {
-    name: "Software Engineering",
+   name: "Software Development",
     description:
-      "Software development, architecture, APIs, databases and engineering practices.",
+      "Application development, programming, databases, APIs and information systems.",
     icon: <Code2 size={21} />,
     skills: [
       "Object-Oriented Programming",
@@ -833,7 +833,7 @@ export default function Skills() {
             "
           >
             A structured overview of my technical skills, tools and
-            technologies across software engineering, AI, data and gaming.
+            technologies across software development, AI, data and gaming.
           </p>
         </motion.div>
 
